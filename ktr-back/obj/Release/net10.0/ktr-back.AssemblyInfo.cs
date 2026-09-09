@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ktr-back")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+66c35301fbf82c26614e338d0c582b13a7c60f30")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1bb9edc9ac179074e33c27306e12db11ce3d2448")]
 [assembly: System.Reflection.AssemblyProductAttribute("ktr-back")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ktr-back")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
