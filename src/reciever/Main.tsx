@@ -1,61 +1,289 @@
-import React from 'react';
 import "./Main.css";
 
-interface ReviewData {
-  id: number;
-  rating: number;
-  timeAgo: string;
-  title: string;
-  content: string;
-  authorInitial: string;
-  authorName: string;
-  avatarBg: string;
-}
+const cards = [
+  {
+    id: "ndzz6l",
+    name: "3T MRI Scanner",
+    institute: "ABC Medical Research Institute",
+    location: "Chennai",
+    image:
+      "https://images.unsplash.com/photo-1516841273335-e39b37888115?auto=format&fit=crop&w=900&q=80",
+    category: "Imaging",
+    details: "3T MRI scanner",
+    use: "Research / Clinical",
+    operator: "Operator Available",
+    availability: "Mon - Fri",
+    time: "9:00 AM - 10:00 AM",
+    minimum: "1 hour",
+    maximum: "6 hours",
+    price: "₹5,000 / hour",
+  },
+  {
+    id: "pet204",
+    name: "PET CT Scanner",
+    institute: "Chennai Biomedical Centre",
+    location: "Chennai",
+    image:
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=900&q=80",
+    category: "Diagnostics",
+    details: "PET CT imaging system",
+    use: "Clinical Research",
+    operator: "Operator Available",
+    availability: "Mon - Sat",
+    time: "10:00 AM - 2:00 PM",
+    minimum: "2 hours",
+    maximum: "5 hours",
+    price: "₹7,000 / hour",
+  },
+  {
+    id: "mic381",
+    name: "Research Microscope",
+    institute: "SRM Research Laboratory",
+    location: "Kattankulathur",
+    image:
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=80",
+    category: "Microscopy",
+    details: "High-resolution microscope",
+    use: "Biology Research",
+    operator: "Operator Not Available",
+    availability: "Mon - Fri",
+    time: "9:00 AM - 5:00 PM",
+    minimum: "1 hour",
+    maximum: "8 hours",
+    price: "₹1,500 / hour",
+  },
+  {
+    id: "cnf492",
+    name: "Confocal Microscope",
+    institute: "Advanced Life Sciences Lab",
+    location: "Bangalore",
+    image:
+      "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&w=900&q=80",
+    category: "Microscopy",
+    details: "Confocal imaging system",
+    use: "Cell Research",
+    operator: "Operator Available",
+    availability: "Tue - Sat",
+    time: "10:00 AM - 4:00 PM",
+    minimum: "2 hours",
+    maximum: "6 hours",
+    price: "₹3,000 / hour",
+  },
+  {
+    id: "sem517",
+    name: "Scanning Electron Microscope",
+    institute: "National Materials Lab",
+    location: "Chennai",
+    image:
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=900&q=80",
+    category: "Materials",
+    details: "High-magnification SEM",
+    use: "Materials Research",
+    operator: "Operator Available",
+    availability: "Mon - Fri",
+    time: "11:00 AM - 3:00 PM",
+    minimum: "2 hours",
+    maximum: "6 hours",
+    price: "₹4,500 / hour",
+  },
+  {
+    id: "pcr628",
+    name: "Real-Time PCR System",
+    institute: "Molecular Biology Centre",
+    location: "Coimbatore",
+    image:
+      "https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=900&q=80",
+    category: "Molecular",
+    details: "96-well real-time PCR",
+    use: "Molecular Research",
+    operator: "Operator Available",
+    availability: "Mon - Fri",
+    time: "9:30 AM - 4:30 PM",
+    minimum: "1 hour",
+    maximum: "5 hours",
+    price: "₹2,000 / hour",
+  },
+];
 
-const reviews: ReviewData[] = Array.from({ length: 10 }).map((_, i) => ({
-  id: i,
-  rating: i % 2 === 0 ? 5 : 4,
-  timeAgo: i % 2 === 0 ? "2 days ago" : "1 week ago",
-  title: i % 2 === 0 ? "Absolutely Exquisite!" : "Solid Product, Great Value",
-  content: i % 2 === 0
-      ? "From the moment I unboxed this, I was impressed by the quality and craftsmanship. It has exceeded all my expectations."
-      : "Does exactly what it says on the tin. Very happy with the purchase, and it was delivered quickly. One minor feature request, but overall a great experience.",
-  authorInitial: i % 2 === 0 ? "B" : "L",
-  authorName: i % 2 === 0 ? "Bianca G." : "Leo K.",
-  avatarBg: i % 2 === 0 ? "bg-slate-400" : "bg-slate-800"
-}));
-
-const StarIcon = ({ filled }: { filled: boolean }) => (
-    <svg className={`w-5 h-5 ${filled ? 'text-yellow-400' : 'text-gray-200'}`} fill="currentColor" viewBox="0 0 20 20">
-      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-    </svg>
-);
-
-export default function Main() {
+function Main() {
   return (
-      <div className="review-container">
-        <div className="review-grid">
-          {reviews.map((review) => (
-              <div key={review.id} className="review-card">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                        <StarIcon key={i} filled={i < review.rating} />
-                    ))}
-                  </div>
-                  <span className="text-gray-500 text-sm">{review.timeAgo}</span>
-                </div>
-                <h3 className="font-bold text-lg mb-2 text-gray-900">{review.title}</h3>
-                <p className="text-gray-600 mb-8 flex-grow leading-relaxed">{review.content}</p>
-                <div className="border-t border-gray-100 pt-4 flex items-center gap-3 mt-auto">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium ${review.avatarBg}`}>
-                    {review.authorInitial}
-                  </div>
-                  <span className="font-medium text-gray-900">{review.authorName}</span>
-                </div>
-              </div>
-          ))}
+    <main className="main-page">
+      <div className="page-shell">
+
+        <nav className="breadcrumb">
+          <span>Home</span>
+          <span>/</span>
+          <span>Resources</span>
+          <span>/</span>
+          <strong>Medical Equipment</strong>
+        </nav>
+
+        <header className="page-header">
+          <div>
+            <p className="eyebrow">RESOURCE LINK</p>
+
+            <h1>Available Equipment</h1>
+
+            <p className="subtitle">
+              Find and book research equipment from nearby institutions.
+            </p>
+          </div>
+
+          <div className="result-count">
+            06 resources available
+          </div>
+        </header>
+
+        <div className="toolbar">
+          <div className="search-box">
+            <span>⌕</span>
+            <input
+              type="text"
+              placeholder="Search equipment..."
+            />
+          </div>
+
+          <button className="filter-button">
+            Filter
+          </button>
         </div>
+
+        <section className="card-grid">
+          {cards.map((card) => (
+            <article className="card" key={card.id}>
+
+              <div className="card-content">
+
+                <div className="equipment-image">
+                  <img
+                    src={card.image}
+                    alt={card.name}
+                  />
+
+                  <span className="image-category">
+                    {card.category}
+                  </span>
+
+                  <span className="availability-badge">
+                    AVAILABLE
+                  </span>
+                </div>
+
+                <div className="title-row">
+
+                  <div>
+                    <h2 className="heading">
+                      {card.name}
+                    </h2>
+
+                    <p className="resource-id">
+                      ID: {card.id}
+                    </p>
+                  </div>
+
+                  <button className="more-button">
+                    ⋯
+                  </button>
+
+                </div>
+
+                <div className="institution">
+
+                  <div>
+                    <strong>{card.institute}</strong>
+
+                    <span>
+                      ◉ {card.location}
+                    </span>
+                  </div>
+
+                </div>
+
+                <div className="data-crumbs">
+
+                  <span>{card.category}</span>
+
+                  <span>{card.use}</span>
+
+                  <span
+                    className={
+                      card.operator === "Operator Available"
+                        ? "operator available"
+                        : "operator"
+                    }
+                  >
+                    {card.operator}
+                  </span>
+
+                </div>
+
+                <div className="equipment-details">
+
+                  <p className="section-label">
+                    Equipment Details
+                  </p>
+
+                  <p>
+                    {card.details}
+                  </p>
+
+                </div>
+
+                <div className="info-grid">
+
+                  <div className="info-box">
+                    <span>Availability</span>
+
+                    <strong>
+                      {card.availability}
+                    </strong>
+
+                    <small>
+                      {card.time}
+                    </small>
+                  </div>
+
+                  <div className="info-box">
+                    <span>Rental Duration</span>
+
+                    <strong>
+                      {card.minimum} - {card.maximum}
+                    </strong>
+
+                    <small>
+                      Flexible booking
+                    </small>
+                  </div>
+
+                </div>
+
+                <footer className="card-footer">
+
+                  <div className="price-section">
+
+                    <span>Rental Price</span>
+
+                    <strong>
+                      {card.price}
+                    </strong>
+
+                  </div>
+
+                  <button className="book-button">
+                    View & Book
+                    <span>↗</span>
+                  </button>
+
+                </footer>
+
+              </div>
+            </article>
+          ))}
+        </section>
+
       </div>
+    </main>
   );
 }
+
+export default Main;
