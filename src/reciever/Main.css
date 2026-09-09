@@ -1,186 +1,13 @@
-* {
-    box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-    margin: 0;
-    min-height: 100%;
-    width: 100%;
-}
-
-body {
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-    background: #f7f8fa;
-    color: #171717;
-}
-
-button,
-input {
-    font: inherit;
-}
-
 /* =========================
-   PAGE
-========================= */
-
-.main-page {
-    width: 100%;
-    min-height: 100vh;
-    padding: 32px 24px 60px;
-    background: #f7f8fa;
-}
-
-.page-shell {
-    width: 100%;
-    max-width: 1380px;
-    margin: 0 auto;
-}
-
-/* =========================
-   BREADCRUMB
-========================= */
-
-.breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    margin-bottom: 28px;
-    font-size: 13px;
-    color: #8a8a8a;
-}
-
-.breadcrumb strong {
-    color: #333;
-    font-weight: 600;
-}
-
-/* =========================
-   HEADER
-========================= */
-
-.page-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 30px;
-    margin-bottom: 28px;
-}
-
-.eyebrow {
-    margin: 0 0 8px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-    color: #2563eb;
-}
-
-.page-header h1 {
-    margin: 0;
-    font-size: clamp(32px, 4vw, 48px);
-    line-height: 1.05;
-    letter-spacing: -1.8px;
-    font-weight: 750;
-    color: #171717;
-}
-
-.subtitle {
-    margin: 12px 0 0;
-    color: #777;
-    font-size: 15px;
-    line-height: 1.6;
-}
-
-.result-count {
-    white-space: nowrap;
-    padding: 9px 13px;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    background: white;
-    color: #666;
-    font-size: 13px;
-}
-
-/* =========================
-   SEARCH TOOLBAR
-========================= */
-
-.toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 22px;
-}
-
-.search-box {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 430px;
-    height: 46px;
-    padding: 0 14px;
-    border: 1px solid #dedede;
-    border-radius: 12px;
-    background: white;
-    transition: 0.2s ease;
-}
-
-.search-box:focus-within {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
-}
-
-.search-box span {
-    margin-right: 9px;
-    font-size: 22px;
-    color: #777;
-}
-
-.search-box input {
-    width: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: #222;
-    font-size: 14px;
-}
-
-.search-box input::placeholder {
-    color: #999;
-}
-
-.filter-button {
-    height: 46px;
-    padding: 0 18px;
-    border: 1px solid #dedede;
-    border-radius: 12px;
-    background: white;
-    color: #333;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.filter-button:hover {
-    border-color: #bbb;
-    background: #fafafa;
-}
-
-/* =========================
-   CARD GRID
+   CARD GRID (Compact & Shortened)
 ========================= */
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 620px));
+    /* Allows 3-4 dense columns on desktop, shrinking down to ~280px per card */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 360px));
     justify-content: center;
-    gap: 22px;
+    gap: 16px;
     width: 100%;
     align-items: stretch;
 }
@@ -197,72 +24,13 @@ input {
     overflow: hidden;
 
     border: 1px solid #dedede;
-    border-radius: 24px;
+    border-radius: 16px;
     background: #ffffff;
 
     transition:
         transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
         box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1),
         border-color 0.35s ease;
-}
-
-.card::before {
-    content: "";
-    position: absolute;
-    right: -80px;
-    top: -80px;
-
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-
-    background: #2563eb;
-    opacity: 0;
-
-    transform: scale(0.2);
-
-    transition:
-        transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-        opacity 0.35s ease;
-
-    z-index: 0;
-}
-
-.card::after {
-    content: "";
-    position: absolute;
-    left: -80px;
-    bottom: -80px;
-
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-
-    background: #2563eb;
-    opacity: 0;
-
-    transform: scale(0.2);
-
-    transition:
-        transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-        opacity 0.35s ease;
-
-    z-index: 0;
-}
-
-.card:hover::before,
-.card:hover::after {
-    transform: scale(5);
-    opacity: 0.04;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    border-color: #c8d7f7;
-
-    box-shadow:
-        0 8px 20px rgba(0, 0, 0, 0.06),
-        0 20px 45px rgba(0, 0, 0, 0.07);
 }
 
 .card-content {
@@ -273,8 +41,10 @@ input {
     flex-direction: column;
 
     height: 100%;
-    gap: 18px;
-    padding: 22px;
+    gap: 12px;
+    /* Tightened vertical spacing */
+    padding: 14px;
+    /* Reduced outer card padding */
 }
 
 /* =========================
@@ -287,55 +57,38 @@ input {
     aspect-ratio: 16 / 9;
 
     overflow: hidden;
-    border-radius: 17px;
+    border-radius: 12px;
     background: #eeeeee;
 }
 
 .equipment-image img {
     display: block;
-
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     transition: transform 0.5s ease;
 }
 
-.card:hover .equipment-image img {
-    transform: scale(1.035);
-}
-
-.image-category {
+.image-category,
+.availability-badge {
     position: absolute;
-    top: 13px;
-    left: 13px;
-
-    padding: 6px 9px;
-
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.94);
-
-    color: #333;
-    font-size: 11px;
+    top: 8px;
+    padding: 4px 7px;
+    border-radius: 6px;
+    font-size: 10px;
     font-weight: 600;
 }
 
+.image-category {
+    left: 8px;
+    background: rgba(255, 255, 255, 0.94);
+    color: #333;
+}
+
 .availability-badge {
-    position: absolute;
-    top: 13px;
-    right: 13px;
-
-    padding: 6px 9px;
-
-    border-radius: 8px;
+    right: 8px;
     background: #ecfdf3;
-
     color: #15803d;
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
 }
 
 /* =========================
@@ -346,133 +99,83 @@ input {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 15px;
+    gap: 10px;
 }
 
 .heading {
     margin: 0;
-
     color: #171717;
-
-    font-size: clamp(21px, 2vw, 26px);
-    line-height: 1.25;
-
-    letter-spacing: -0.5px;
+    font-size: 16px;
+    /* Optimized font size for tight layouts */
+    line-height: 1.3;
+    letter-spacing: -0.3px;
     font-weight: 700;
+
+    /* Prevents title multi-line blowouts */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .resource-id {
-    margin: 5px 0 0;
-
+    margin: 3px 0 0;
     color: #a0a0a0;
-
-    font-size: 11px;
+    font-size: 10px;
     font-family: monospace;
 }
 
 .more-button {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     flex-shrink: 0;
-
     border: 1px solid #e6e6e6;
-    border-radius: 9px;
-
+    border-radius: 7px;
     background: #fafafa;
     color: #666;
-
     cursor: pointer;
-
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1;
-
-    transition: 0.2s ease;
-}
-
-.more-button:hover {
-    background: #f0f0f0;
 }
 
 /* =========================
-   INSTITUTION
+   INSTITUTION & DATA
 ========================= */
 
 .institution {
-    padding-bottom: 16px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #eeeeee;
-}
-
-.institution div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
 }
 
 .institution strong {
     color: #333;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
 
 .institution span {
     color: #888;
-    font-size: 13px;
+    font-size: 12px;
 }
-
-/* =========================
-   DATA TAGS
-========================= */
 
 .data-crumbs {
     display: flex;
     flex-wrap: wrap;
-    gap: 7px;
-}
-
-.data-crumbs span {
-    padding: 6px 9px;
-
-    border: 1px solid #e8e8e8;
-    border-radius: 7px;
-
-    background: #fafafa;
-    color: #666;
-
-    font-size: 11px;
-}
-
-.data-crumbs .operator.available {
-    border-color: #d7f1df;
-    background: #f1fbf4;
-    color: #25834a;
-}
-
-/* =========================
-   EQUIPMENT DETAILS
-========================= */
-
-.equipment-details {
-    display: flex;
-    flex-direction: column;
     gap: 5px;
 }
 
-.section-label {
-    margin: 0;
-
-    color: #999;
-
+.data-crumbs span {
+    padding: 4px 7px;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    background: #fafafa;
+    color: #666;
     font-size: 10px;
-    font-weight: 700;
-
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.equipment-details p:last-child {
-    margin: 0;
-    color: #444;
-    font-size: 14px;
+    white-space: nowrap;
 }
 
 /* =========================
@@ -482,43 +185,38 @@ input {
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
 }
 
 .info-box {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-
+    gap: 2px;
     min-width: 0;
-
-    padding: 13px;
-
+    padding: 8px 10px;
     border: 1px solid #e8e8e8;
-    border-radius: 12px;
-
+    border-radius: 8px;
     background: #fafafa;
 }
 
 .info-box span {
     color: #999;
-
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
-
     text-transform: uppercase;
-    letter-spacing: 0.7px;
 }
 
 .info-box strong {
     color: #222;
-    font-size: 13px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .info-box small {
     color: #888;
-    font-size: 11px;
-
+    font-size: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -532,193 +230,21 @@ input {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    gap: 15px;
-
-    padding-top: 17px;
-
+    gap: 10px;
+    padding-top: 10px;
     border-top: 1px solid #eeeeee;
-
     margin-top: auto;
-}
-
-.price-section {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.price-section span {
-    color: #999;
-
-    font-size: 10px;
-    font-weight: 600;
-
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
 }
 
 .price-section strong {
     color: #171717;
-
-    font-size: 19px;
+    font-size: 16px;
     letter-spacing: -0.3px;
 }
 
 .book-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 8px;
-
-    min-height: 42px;
-
-    padding: 0 16px;
-
-    border: none;
-    border-radius: 10px;
-
-    background: #171717;
-    color: white;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
-}
-
-.book-button span {
-    font-size: 16px;
-}
-
-.book-button:hover {
-    background: #2563eb;
-    transform: translateY(-1px);
-}
-
-/* =========================
-   TABLET
-========================= */
-
-@media (max-width: 1000px) {
-    .main-page {
-        padding: 26px 18px 50px;
-    }
-
-    .card-grid {
-        grid-template-columns: 1fr;
-        width: 100%;
-    }
-
-    .card {
-        max-width: 760px;
-        margin: 0 auto;
-    }
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 600px) {
-    .main-page {
-        padding: 20px 14px 40px;
-    }
-
-    .breadcrumb {
-        margin-bottom: 20px;
-        gap: 6px;
-        font-size: 11px;
-    }
-
-    .page-header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 14px;
-        margin-bottom: 22px;
-    }
-
-    .page-header h1 {
-        font-size: 34px;
-    }
-
-    .subtitle {
-        max-width: 330px;
-        font-size: 14px;
-    }
-
-    .result-count {
-        font-size: 12px;
-    }
-
-    .toolbar {
-        align-items: stretch;
-    }
-
-    .search-box {
-        max-width: none;
-    }
-
-    .filter-button {
-        padding: 0 14px;
-    }
-
-    .card-grid {
-        gap: 16px;
-        width: 100%;
-    }
-
-    .card {
-        border-radius: 20px;
-    }
-
-    .card-content {
-        gap: 15px;
-        padding: 15px;
-    }
-
-    .equipment-image {
-        border-radius: 14px;
-    }
-
-    .heading {
-        font-size: 21px;
-    }
-
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .card-footer {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .book-button {
-        width: 100%;
-    }
-}
-
-/* =========================
-   VERY SMALL PHONES
-========================= */
-
-@media (max-width: 380px) {
-    .main-page {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .card-content {
-        padding: 13px;
-    }
-
-    .data-crumbs span {
-        font-size: 10px;
-    }
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 12px;
+    border-radius: 8px;
 }
