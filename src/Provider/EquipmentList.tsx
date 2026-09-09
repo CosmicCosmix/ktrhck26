@@ -1,91 +1,183 @@
 import React, { useState } from 'react';
 import { MOCK_EQUIPMENT, type EquipmentItem } from './mockData';
-import { Plus, Search, MapPin, Wrench, CheckCircle, Clock } from 'lucide-react';
 
 export const EquipmentList: React.FC = () => {
   const [items] = useState<EquipmentItem[]>(MOCK_EQUIPMENT);
-  const [filter, setFilter] = useState('');
+  const [query, setQuery] = useState('');
+  const [selectedMachine, setSelectedMachine] = useState<EquipmentItem | null>(null);
 
-  const filteredItems = items.filter(i => 
-    i.name.toLowerCase().includes(filter.toLowerCase()) || 
-    i.category.toLowerCase().includes(filter.toLowerCase())
+  const filtered = items.filter(
+    (e) =>
+      e.name.toLowerCase().includes(query.toLowerCase()) ||
+      e.category.toLowerCase().includes(query.toLowerCase()) ||
+      e.id.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-500">
-      {/* Header Controls */}
-      <div className="flex flex-col md:flex-row justify-between gap-3">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+    <div className="w-full space-y-6">
+      {/* Search Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-neutral-200">
+        <div>
+          <h2 className="text-base font-bold text-black tracking-tight">
+            Registered Institutional Units
+          </h2>
+          <p className="text-xs font-medium text-neutral-600">
+            Live infrastructure and verified medical equipment on the network
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           <input
             type="text"
-            placeholder="Search listed assets or categories..."
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition"
+            placeholder="Search by equipment, wing, or category..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full sm:w-72 bg-neutral-50 border border-neutral-300 rounded-md px-3 py-2 text-xs font-medium text-black placeholder-neutral-500 focus:outline-none focus:border-black focus:bg-white transition"
           />
+          <button className="bg-black hover:bg-neutral-800 text-white text-xs font-semibold px-4 py-2 rounded-md transition shrink-0 shadow-sm">
+            + Register New Machine
+          </button>
         </div>
-        <button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-medium px-4 py-2 rounded-xl text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition">
-          <Plus className="w-4 h-4" /> Add New Infrastructure
-        </button>
       </div>
 
-      {/* Equipment Table/Card List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredItems.map((item) => (
-          <div key={item.id} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 hover:border-slate-700 transition space-y-4">
-            <div className="flex justify-between items-start">
-              <div>
-                <span className="text-xs font-mono px-2.5 py-0.5 rounded-md bg-slate-800 text-cyan-400 border border-slate-700">
+      {/* Equipment Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {filtered.map((item) => (
+          <div
+            key={item.id}
+            className="w-full border border-neutral-200 rounded-xl overflow-hidden flex flex-col justify-between hover:border-black transition duration-200 bg-white"
+          >
+            <div>
+              {/* Image Preview Container */}
+              <div className="relative h-48 w-full bg-neutral-100 overflow-hidden border-b border-neutral-200">
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="w-full h-full object-cover grayscale-15 hover:grayscale-0 transition-all duration-300"
+                />
+
+                {/* Status Indicator */}
+                <span
+                  className={`absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border shadow-sm ${
+                    item.status === 'Active'
+                      ? 'bg-white text-black border-black font-semibold'
+                      : item.status === 'Rented'
+                      ? 'bg-black text-white border-black'
+                      : 'bg-neutral-200 text-neutral-800 border-neutral-300'
+                  }`}
+                >
+                  {item.status}
+                </span>
+
+                <span className="absolute bottom-3 left-3 text-[10px] font-mono font-bold bg-white/95 text-black px-2 py-0.5 rounded border border-neutral-200">
                   {item.id}
                 </span>
-                <h3 className="font-semibold text-slate-100 text-lg mt-2">{item.name}</h3>
-                <p className="text-slate-400 text-xs">{item.modelNumber}</p>
               </div>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
-                item.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                item.status === 'Rented' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' :
-                'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-              }`}>
-                {item.status === 'Active' && <CheckCircle className="w-3 h-3" />}
-                {item.status === 'Rented' && <Clock className="w-3 h-3 animate-spin" />}
-                {item.status === 'Maintenance' && <Wrench className="w-3 h-3" />}
-                {item.status}
-              </span>
+
+              {/* Machine Details */}
+              <div className="p-5">
+                <div className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">
+                  {item.category}
+                </div>
+                <h3 className="text-base font-bold text-black mt-1 tracking-tight">{item.name}</h3>
+                <p className="text-xs text-neutral-600 font-medium">{item.modelNumber}</p>
+
+                {/* Metrics Grid */}
+                <div className="grid grid-cols-2 gap-3 my-4 p-3 bg-neutral-50 rounded-lg border border-neutral-200 text-xs">
+                  <div>
+                    <span className="text-neutral-500 block text-[10px] uppercase font-semibold">
+                      Hourly Rate
+                    </span>
+                    <span className="font-extrabold text-black text-sm">
+                      {item.ratePerHour} ALGO
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-neutral-500 block text-[10px] uppercase font-semibold">
+                      Total Yield
+                    </span>
+                    <span className="font-extrabold text-black text-sm">
+                      {item.totalEarningsAlgo} ALGO
+                    </span>
+                  </div>
+                </div>
+
+                {/* Capacity Progress Bar */}
+                <div>
+                  <div className="flex justify-between text-xs font-semibold text-black mb-1.5">
+                    <span>Capacity Allocated</span>
+                    <span className="font-mono">{item.utilizationRate}%</span>
+                  </div>
+                  <div className="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
+                    <div
+                      className="bg-black h-full rounded-full transition-all duration-500"
+                      style={{ width: `${item.utilizationRate}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-              <div>
-                <span className="text-slate-500 block">Rate/Hour</span>
-                <span className="text-slate-200 font-bold">{item.ratePerHour} ALGO</span>
-              </div>
-              <div>
-                <span className="text-slate-500 block">Total Yield</span>
-                <span className="text-emerald-400 font-bold">{item.totalEarningsAlgo} ALGO</span>
-              </div>
-            </div>
-
-            {/* Utilization Bar */}
-            <div>
-              <div className="flex justify-between text-xs text-slate-400 mb-1">
-                <span>Capacity Efficiency</span>
-                <span className="font-mono text-slate-200">{item.utilizationRate}%</span>
-              </div>
-              <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
-                <div 
-                  className="bg-cyan-500 h-full rounded-full transition-all duration-1000"
-                  style={{ width: `${item.utilizationRate}%` }}
-                ></div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1 text-xs text-slate-500 pt-2 border-t border-slate-800/60">
-              <MapPin className="w-3.5 h-3.5 text-slate-400" />
-              {item.location}
+            {/* Card Action Footer */}
+            <div className="text-xs text-neutral-600 px-5 py-3.5 bg-neutral-50 border-t border-neutral-200 flex items-center justify-between font-medium">
+              <span>📍 {item.location}</span>
+              <button
+                onClick={() => setSelectedMachine(item)}
+                className="text-black font-bold hover:underline text-xs"
+              >
+                Schedule Slots →
+              </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Modal View */}
+      {selectedMachine && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
+          <div className="bg-white border border-black rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="text-[10px] font-mono bg-neutral-100 text-black px-2 py-0.5 rounded border border-neutral-300">
+                  {selectedMachine.id}
+                </span>
+                <h3 className="text-base font-bold text-black mt-2">{selectedMachine.name}</h3>
+                <p className="text-xs text-neutral-600">{selectedMachine.modelNumber}</p>
+              </div>
+              <button
+                onClick={() => setSelectedMachine(null)}
+                className="text-neutral-500 hover:text-black text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-3 bg-neutral-50 rounded-lg border border-neutral-200 text-xs space-y-1.5">
+              <div className="flex justify-between">
+                <span className="text-neutral-500">Location:</span>
+                <span className="font-semibold text-black">{selectedMachine.location}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-500">Rate:</span>
+                <span className="font-bold text-black">{selectedMachine.ratePerHour} ALGO/hr</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-500">Total Yield:</span>
+                <span className="font-bold text-black">{selectedMachine.totalEarningsAlgo} ALGO</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setSelectedMachine(null)}
+              className="w-full py-2 text-xs font-semibold bg-black text-white rounded-md hover:bg-neutral-800 transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+export default EquipmentList;

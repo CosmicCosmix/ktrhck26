@@ -1,74 +1,110 @@
 import React, { useState } from 'react';
 import { StatsOverview } from './StatsOverview';
 import { EquipmentList } from './EquipmentList';
-import { LayoutDashboard, Layers, ArrowLeftRight, Building } from 'lucide-react';
+import { PROVIDER_STATS } from './mockData';
 
 interface ProviderDashboardProps {
   onToggleToRenter?: () => void;
 }
 
 export const ProviderDashboard: React.FC<ProviderDashboardProps> = ({ onToggleToRenter }) => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'equipment'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'equipment'>('equipment');
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      {/* Provider Header */}
-      <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-cyan-500/20">
-              <Building className="w-5 h-5" />
+    <div className="w-full min-h-screen bg-white text-black flex flex-col antialiased">
+      
+      {/* ── Full-Width Black & White Topbar ── */}
+      <header className="w-full border-b border-neutral-200 bg-white sticky top-0 z-30 px-6 lg:px-10 py-3.5 flex items-center justify-between">
+        
+        {/* Left: Brand & Navigation */}
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold text-xs tracking-tight">
+              RL
             </div>
             <div>
-              <span className="font-bold text-base bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+              <span className="text-xs font-bold text-black tracking-widest block uppercase">
                 ResourceLink
               </span>
-              <span className="block text-[10px] text-cyan-400 font-mono tracking-wider">PROVIDER PORTAL</span>
+              <span className="text-[10px] text-neutral-500 font-mono">
+                NODE: {PROVIDER_STATS.nodeId}
+              </span>
             </div>
           </div>
 
-          {/* Switch to Rental Mode Toggle */}
-          <button 
+          {/* Clean Segmented Navigation */}
+          <nav className="flex items-center gap-1.5 bg-neutral-100 p-1 rounded-lg border border-neutral-200">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs rounded-md font-semibold transition ${
+                activeTab === 'dashboard'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-neutral-600 hover:text-black'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 18 18" fill="currentColor">
+                <rect x="1" y="1" width="7" height="7" rx="1.5" />
+                <rect x="10" y="1" width="7" height="7" rx="1.5" />
+                <rect x="1" y="10" width="7" height="7" rx="1.5" />
+                <rect x="10" y="10" width="7" height="7" rx="1.5" />
+              </svg>
+              Provider Analytics
+            </button>
+
+            <button
+              onClick={() => setActiveTab('equipment')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs rounded-md font-semibold transition ${
+                activeTab === 'equipment'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-neutral-600 hover:text-black'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 18 18" fill="currentColor">
+                <rect x="3" y="2" width="12" height="14" rx="2" opacity=".3" />
+                <path d="M6 6h6M6 9h6M6 12h4" stroke="currentColor" strokeWidth="1.2" fill="none" />
+              </svg>
+              Machine Inventory
+            </button>
+          </nav>
+        </div>
+
+        {/* Right: Institutional Profile & Switch Mode */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5 text-xs">
+            <div className="w-7 h-7 rounded-full bg-neutral-100 border border-neutral-300 flex items-center justify-center font-bold text-[10px] text-neutral-800">
+              SRM
+            </div>
+            <span className="font-semibold text-black hidden md:inline">
+              {PROVIDER_STATS.institutionName}
+            </span>
+          </div>
+
+          <button
             onClick={onToggleToRenter}
-            className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold px-3 py-2 rounded-xl border border-slate-700 text-slate-300 hover:text-white transition"
+            className="py-1.5 px-3 bg-black hover:bg-neutral-800 text-white text-xs font-semibold rounded-md transition shadow-sm"
           >
-            <ArrowLeftRight className="w-3.5 h-3.5 text-cyan-400" />
-            Switch to Rental Mode
+            ⇄ Switch to Renter
           </button>
         </div>
       </header>
 
-      {/* Portal Container */}
-      <div className="max-w-7xl w-full mx-auto p-4 md:p-6 flex-1 space-y-6">
-        {/* Navigation Tabs */}
-        <div className="flex space-x-2 border-b border-slate-800 pb-3">
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition ${
-              activeTab === 'dashboard'
-                ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            Statistics
-          </button>
-          <button
-            onClick={() => setActiveTab('equipment')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition ${
-              activeTab === 'equipment'
-                ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            Equipment
-          </button>
+      {/* ── Full Screen Content Container ── */}
+      <main className="w-full flex-1 px-6 lg:px-10 py-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-extrabold text-black tracking-tight">
+            {activeTab === 'dashboard' ? 'Capacity & Yield Analytics' : 'Institutional Infrastructure'}
+          </h1>
+          <p className="text-xs font-medium text-neutral-600 mt-1">
+            {activeTab === 'dashboard'
+              ? 'Real-time performance, machine hours, and automated settlements.'
+              : 'Configure equipment operational slots, telemetry, and on-demand capacity rates.'}
+          </p>
         </div>
 
-        {/* Tab View Switcher */}
-        {activeTab === 'dashboard' ? <StatsOverview /> : <EquipmentList />}
-      </div>
+        <div className="w-full">
+          {activeTab === 'dashboard' ? <StatsOverview /> : <EquipmentList />}
+        </div>
+      </main>
     </div>
   );
 };
