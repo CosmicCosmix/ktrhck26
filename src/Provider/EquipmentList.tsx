@@ -83,13 +83,13 @@ export const EquipmentList: React.FC = () => {
         </div>
       </div>
 
-      {/* Equipment Grid with Slow Expanding Transition */}
+      {/* Equipment Grid with Canonical Tailwind v4 Durations */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
         {filtered.map((item) => (
           <div
             key={item.id}
             onClick={() => setSelectedMachine(item)}
-            className="group relative cursor-pointer w-full border border-black/10 rounded-2xl overflow-hidden flex flex-col justify-between bg-white transition-all duration-700 hover:-translate-y-1 hover:border-black/30 hover:shadow-xl isolation-auto before:content-[''] before:absolute before:-top-5 before:-right-5 before:w-10 before:h-10 before:rounded-full before:bg-[#111] before:z-0 before:scale-100 before:transition-transform before:duration-[1600ms] before:ease-in-out hover:before:scale-[65]"
+            className="group relative cursor-pointer w-full border border-black/10 rounded-2xl overflow-hidden flex flex-col justify-between bg-white transition-all duration-700 hover:-translate-y-1 hover:border-black/30 hover:shadow-xl isolation-auto before:content-[''] before:absolute before:-top-5 before:-right-5 before:w-10 before:h-10 before:rounded-full before:bg-[#111] before:z-0 before:scale-100 before:transition-transform before:duration-1600 before:ease-in-out hover:before:scale-[65]"
           >
             {/* Corner Badge Arrow */}
             <div className="absolute top-0 right-0 z-20 w-7 h-7 rounded-bl-xl bg-[#111] flex items-center justify-center text-white text-[11px] transition-transform duration-500 group-hover:scale-105">
@@ -98,15 +98,15 @@ export const EquipmentList: React.FC = () => {
 
             <div className="relative z-10">
               {/* Image Banner */}
-              <div className="relative h-36 w-full bg-[#f0f0ee] overflow-hidden border-b border-black/10 group-hover:border-white/10 transition-colors duration-[1400ms]">
+              <div className="relative h-36 w-full bg-[#f0f0ee] overflow-hidden border-b border-black/10 group-hover:border-white/10 transition-colors duration-1400">
                 <img
                   src={item.imageUrl}
                   alt={item.name}
-                  className="w-full h-full object-cover grayscale-15 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1400ms]"
+                  className="w-full h-full object-cover grayscale-15 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1400"
                 />
 
                 <span
-                  className={`absolute top-2.5 left-2.5 text-[8px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider border backdrop-blur-md transition-colors duration-[1400ms] ${
+                  className={`absolute top-2.5 left-2.5 text-[8px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider border backdrop-blur-md transition-colors duration-1400 ${
                     item.status === 'Active'
                       ? 'bg-white/90 text-[#111] border-black/10'
                       : item.status === 'Rented'
@@ -124,31 +124,31 @@ export const EquipmentList: React.FC = () => {
 
               {/* Body Details */}
               <div className="p-4">
-                <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-black/40 group-hover:text-white/40 transition-colors duration-[1400ms]">
+                <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-black/40 group-hover:text-white/40 transition-colors duration-1400">
                   {item.category}
                 </div>
-                <h3 className="text-sm font-medium text-[#111] group-hover:text-white mt-1 tracking-tight truncate transition-colors duration-[1400ms]">
+                <h3 className="text-sm font-medium text-[#111] group-hover:text-white mt-1 tracking-tight truncate transition-colors duration-1400">
                   {item.name}
                 </h3>
-                <p className="text-[11px] text-black/45 group-hover:text-white/50 font-normal truncate transition-colors duration-[1400ms]">
+                <p className="text-[11px] text-black/45 group-hover:text-white/50 font-normal truncate transition-colors duration-1400">
                   {item.modelNumber}
                 </p>
 
                 {/* Metrics Box */}
-                <div className="grid grid-cols-2 gap-2 my-3 p-2.5 bg-[#f8f8f6] group-hover:bg-white/5 border border-black/5 group-hover:border-white/10 rounded-xl text-xs transition-all duration-[1400ms]">
+                <div className="grid grid-cols-2 gap-2 my-3 p-2.5 bg-[#f8f8f6] group-hover:bg-white/5 border border-black/5 group-hover:border-white/10 rounded-xl text-xs transition-all duration-1400">
                   <div>
-                    <span className="text-black/40 group-hover:text-white/40 block text-[8px] uppercase tracking-wider font-semibold transition-colors duration-[1400ms]">
+                    <span className="text-black/40 group-hover:text-white/40 block text-[8px] uppercase tracking-wider font-semibold transition-colors duration-1400">
                       Rate / Hour
                     </span>
-                    <span className="font-medium text-[#111] group-hover:text-white text-xs transition-colors duration-[1400ms]">
+                    <span className="font-medium text-[#111] group-hover:text-white text-xs transition-colors duration-1400">
                       {item.ratePerHour} ALGO
                     </span>
                   </div>
                   <div>
-                    <span className="text-black/40 group-hover:text-white/40 block text-[8px] uppercase tracking-wider font-semibold transition-colors duration-[1400ms]">
+                    <span className="text-black/40 group-hover:text-white/40 block text-[8px] uppercase tracking-wider font-semibold transition-colors duration-1400">
                       Total Yield
                     </span>
-                    <span className="font-medium text-[#111] group-hover:text-white text-xs transition-colors duration-[1400ms]">
+                    <span className="font-medium text-[#111] group-hover:text-white text-xs transition-colors duration-1400">
                       {item.totalEarningsAlgo} ALGO
                     </span>
                   </div>
@@ -156,11 +156,11 @@ export const EquipmentList: React.FC = () => {
 
                 {/* Capacity Allocation Meter */}
                 <div>
-                  <div className="flex justify-between text-[10px] font-medium text-[#111] group-hover:text-white mb-1 transition-colors duration-[1400ms]">
+                  <div className="flex justify-between text-[10px] font-medium text-[#111] group-hover:text-white mb-1 transition-colors duration-1400">
                     <span className="text-black/50 group-hover:text-white/60">Capacity Allocated</span>
                     <span className="font-mono">{item.utilizationRate}%</span>
                   </div>
-                  <div className="w-full bg-black/10 group-hover:bg-white/10 h-1 rounded-full overflow-hidden transition-colors duration-[1400ms]">
+                  <div className="w-full bg-black/10 group-hover:bg-white/10 h-1 rounded-full overflow-hidden transition-colors duration-1400">
                     <div
                       className="bg-[#111] group-hover:bg-white h-full rounded-full transition-all duration-700"
                       style={{ width: `${item.utilizationRate}%` }}
@@ -171,8 +171,8 @@ export const EquipmentList: React.FC = () => {
             </div>
 
             {/* Footer */}
-            <div className="relative z-10 text-[10px] text-black/50 group-hover:text-white/60 px-4 py-3 border-t border-black/5 group-hover:border-white/10 flex items-center justify-between transition-all duration-[1400ms]">
-              <span className="truncate max-w-[130px] flex items-center gap-1">
+            <div className="relative z-10 text-[10px] text-black/50 group-hover:text-white/60 px-4 py-3 border-t border-black/5 group-hover:border-white/10 flex items-center justify-between transition-all duration-1400">
+              <span className="truncate max-w-32.5 flex items-center gap-1">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" />
                 </svg>

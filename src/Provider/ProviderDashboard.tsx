@@ -12,16 +12,16 @@ export const ProviderDashboard: React.FC<ProviderDashboardProps> = ({ onToggleTo
 
   return (
     <div className="min-h-screen w-full bg-[#f8f8f6] text-[#111] antialiased">
-      {/* Floating Pill Header - Identical to Landing Page */}
+      {/* Floating Pill Header */}
       <header className="fixed left-1/2 top-3 z-50 flex w-[calc(100%-24px)] max-w-7xl -translate-x-1/2 items-center justify-between rounded-2xl border border-black/10 bg-white/80 px-4 py-3 shadow-lg shadow-black/5 backdrop-blur-xl md:px-6">
         {/* Left: Brand Mark */}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2.5 font-semibold tracking-tight text-xs">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-black">
-              <span className="flex gap-[2px]">
-                <span className="h-3 w-[2px] rounded-full bg-white" />
-                <span className="h-5 w-[2px] rounded-full bg-white" />
-                <span className="h-3 w-[2px] rounded-full bg-white" />
+              <span className="flex gap-0.5">
+                <span className="h-3 w-0.5 rounded-full bg-white" />
+                <span className="h-5 w-0.5 rounded-full bg-white" />
+                <span className="h-3 w-0.5 rounded-full bg-white" />
               </span>
             </span>
             <div className="flex flex-col">
@@ -32,7 +32,7 @@ export const ProviderDashboard: React.FC<ProviderDashboardProps> = ({ onToggleTo
             </div>
           </div>
 
-          {/* Center Tabs Styled like Landing Page Pills */}
+          {/* Center Tabs */}
           <nav className="hidden sm:flex items-center gap-1.5 rounded-xl border border-black/10 bg-[#f8f8f6] p-1">
             <button
               onClick={() => setActiveTab('equipment')}
@@ -96,7 +96,7 @@ export const ProviderDashboard: React.FC<ProviderDashboardProps> = ({ onToggleTo
         </div>
       </main>
 
-      {/* Subtle Footer matching App.tsx */}
+      {/* Footer */}
       <footer className="border-t border-black/10 py-6 text-center text-[9px] text-black/30">
         ResourceLink Institutional Operating System · Verified Algorand Node
       </footer>
