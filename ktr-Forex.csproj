@@ -21,4 +21,12 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
   </ItemGroup>
 
+  <!-- Do not compile the nested backend project as part of this project -->
+  <ItemGroup>
+    <Compile Remove="ktr-back\**" />
+    <Content Remove="ktr-back\**" />
+    <EmbeddedResource Remove="ktr-back\**" />
+    <None Remove="ktr-back\**" />
+  </ItemGroup>
+
 </Project>
