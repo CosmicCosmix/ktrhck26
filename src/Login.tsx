@@ -1,340 +1,873 @@
 import React, { useState } from "react";
 
-// Types matching specification rules
-interface Resource {
-    id: string;
-    equipmentName: string;
-    manufacturer: string;
-    model: string;
-    institution: string;
-    sector: "Hospitals" | "Research Labs" | "Universities" | "Industrial";
-    facility: string;
-    technicalSpecs: string;
-    location: string;
-    availability: boolean;
-    operatorRequirement: string;
-    certificationStatus: string;
-    pricing: string;
-    termsOfAccess: string;
-    responsibleManager: string;
-    institutionVerified: boolean;
-}
+export const Login: React.FC = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [registrationId, setRegistrationId] = useState("");
+    const [institutionType, setInstitutionType] = useState("");
+    const [declaration, setDeclaration] = useState(false);
 
-interface BookingRequest {
-    resourceId: string;
-    researcherName: string;
-    researcherEmail: string;
-    institution: string;
-    purpose: string;
-    duration: string;
-}
+    const [error, setError] = useState("");
+    const [isVerified, setIsVerified] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-const SAMPLE_RESOURCES: Resource[] = [
-    {
-        id: "res-1",
-        equipmentName: "Transmission Electron Microscope (TEM)",
-        manufacturer: "Thermo Fisher Scientific",
-        model: "Talos F200X",
-        institution: "IIT Madras - Research Park",
-        sector: "Research Labs",
-        facility: "Advanced Imaging Suite",
-        technicalSpecs: "200kV Field Emission Gun, Super-X EDS System",
-        location: "Chennai, Tamil Nadu",
-        availability: true,
-        operatorRequirement: "Certified Technician Only",
-        certificationStatus: "Calibrated ISO/IEC 17025 (Valid till 2027)",
-        pricing: "₹2,500 / hr",
-        termsOfAccess: "Non-commercial academic research only. Prior training required.",
-        responsibleManager: "Dr. A. Ramanathan (Facility Director)",
-        institutionVerified: true,
-    },
-    {
-        id: "res-2",
-        equipmentName: "High-Field 7T MRI Scanner",
-        manufacturer: "Siemens Healthineers",
-        model: "MAGNETOM Terra",
-        institution: "Apollo Hospitals & Research Centre",
-        sector: "Hospitals",
-        facility: "Neuroimaging Core Lab",
-        technicalSpecs: "7 Tesla, 80 mT/m gradients, 64-channel head coil",
-        location: "Chennai, Tamil Nadu",
-        availability: true,
-        operatorRequirement: "Clinical Radiologist Approved",
-        certificationStatus: "NABH & CE Certified",
-        pricing: "₹8,000 / slot",
-        termsOfAccess: "IRB approval mandatory prior to booking authorization.",
-        responsibleManager: "Dr. K. Swaminathan (Lead Radiologist)",
-        institutionVerified: true,
-    },
-    {
-        id: "res-3",
-        equipmentName: "Inductively Coupled Plasma Mass Spectrometer (ICP-MS)",
-        manufacturer: "Agilent Technologies",
-        model: "7900 ICP-MS",
-        institution: "Anna University Cleanrooms",
-        sector: "Universities",
-        facility: "Environmental Analysis Lab",
-        technicalSpecs: "Sub-ppt detection limits, Octopole Reaction System",
-        location: "Guindy, Chennai",
-        availability: false,
-        operatorRequirement: "Supervised Access",
-        certificationStatus: "Calibrated Jan 2026",
-        pricing: "₹1,800 / sample",
-        termsOfAccess: "Standard safety protocols for trace metal samples required.",
-        responsibleManager: "Prof. S. Meenakshi",
-        institutionVerified: true,
-    }
-];
+    const checkInstitutionalEmail = (emailAddress: string) => {
+        const emailDomain = emailAddress.split("@")[1]?.toLowerCase();
 
-export const ReceiverLandingPage: React.FC = () => {
-    const [selectedSector, setSelectedSector] = useState<string>("All");
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+        if (!emailDomain) {
+            return false;
+        }
 
-    // Booking Form State
-    const [bookingStep, setBookingStep] = useState<"form" | "submitted">("form");
-    const [bookingData, setBookingData] = useState<BookingRequest>({
-        resourceId: "",
-        researcherName: "",
-        researcherEmail: "",
-        institution: "",
-        purpose: "",
-        duration: "1 Day"
-    });
+        // Block common personal email providers
+        const personalDomains = [
+            "gmail.com",
+            "yahoo.com",
+            "outlook.com",
+            "hotmail.com",
+            "icloud.com",
+            "protonmail.com"
+        ];
 
-    const sectors = ["All", "Hospitals", "Research Labs", "Universities", "Industrial"];
+        if (personalDomains.includes(emailDomain)) {
+            return false;
+        }
 
-    const filteredResources = SAMPLE_RESOURCES.filter((res) => {
-        const matchesSector = selectedSector === "All" || res.sector === selectedSector;
-        const matchesSearch =
-            res.equipmentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            res.institution.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            res.location.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesSector && matchesSearch;
-    });
-
-    const handleOpenBooking = (res: Resource) => {
-        setSelectedResource(res);
-        setBookingData((prev) => ({ ...prev, resourceId: res.id }));
-        setBookingStep("form");
+        // Accept common academic/institutional domain patterns
+        return (
+            emailDomain.endsWith(".edu") ||
+            emailDomain.endsWith(".edu.in") ||
+            emailDomain.endsWith(".ac.in") ||
+            emailDomain.endsWith(".ac.uk") ||
+            emailDomain.endsWith(".edu.au") ||
+            emailDomain.includes(".gov.") ||
+            emailDomain.endsWith(".gov.in")
+        );
     };
 
-    const handleBookingSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setBookingStep("submitted");
+
+        setError("");
+        setIsVerified(false);
+
+        const trimmedEmail = email.trim().toLowerCase();
+        const trimmedRegistrationId = registrationId.trim();
+
+        // Rule 1: Required fields
+        if (
+            !trimmedEmail ||
+            !password ||
+            !trimmedRegistrationId ||
+            !institutionType
+        ) {
+            setError("Please complete all required institution verification fields.");
+            return;
+        }
+
+        // Rule 2: Institutional email verification
+        if (!checkInstitutionalEmail(trimmedEmail)) {
+            setError(
+                "Please use an official institutional email address. Personal email providers are not accepted."
+            );
+            return;
+        }
+
+        // Rule 3: Minimum password requirement for the prototype
+        if (password.length < 8) {
+            setError("Password must contain at least 8 characters.");
+            return;
+        }
+
+        // Rule 4: Institution registration ID
+        if (trimmedRegistrationId.length < 5) {
+            setError(
+                "Please enter a valid institutional registration ID."
+            );
+            return;
+        }
+
+        // Rule 5: Institutional declaration
+        if (!declaration) {
+            setError(
+                "Please confirm that the institution is officially registered and authorised to use the platform."
+            );
+            return;
+        }
+
+        /*
+         * PROTOTYPE VERIFICATION
+         *
+         * In the production version, this section should call your backend.
+         *
+         * Backend verification should check:
+         *
+         * 1. Institutional email/domain
+         * 2. Official institution registration details
+         * 3. Government/academic registry information
+         * 4. Uploaded institutional documentation
+         * 5. Administrator approval
+         * 6. Institution verification status
+         *
+         * The frontend should NEVER be responsible for deciding
+         * whether an institution is genuinely verified.
+         */
+
+        setIsVerified(true);
+        setIsLoggedIn(true);
     };
 
-    return (
-        <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Inter, sans-serif", color: "#0f172a" }}>
-            {/* Header */}
-            <header style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0", padding: "16px 32px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                    <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#1e293b" }}>Verified Scientific Resource Network</h1>
-                    <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>Secure access to verified high-value equipment & infrastructure</p>
-                </div>
-                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                    <span style={{ fontSize: "12px", background: "#f1f5f9", padding: "6px 12px", borderRadius: "20px", border: "1px solid #cbd5e1" }}>
-                        🔒 Authenticated Access Platform
-                    </span>
-                </div>
-            </header>
-
-            {/* Main Content */}
-            <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "32px 16px" }}>
-                {/* Search & Sector Filter Section */}
-                <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "20px", marginBottom: "24px" }}>
-                    <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "16px" }}>
-                        <input
-                            type="text"
-                            placeholder="Search equipment, institution, or location..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            style={{ flex: 1, minWidth: "280px", padding: "10px 14px", border: "1px solid #cbd5e1", borderRadius: "8px", outline: "none" }}
-                        />
+    // VERIFIED INSTITUTION DASHBOARD
+    if (isLoggedIn && isVerified) {
+        return (
+            <main
+                style={{
+                    minHeight: "100vh",
+                    padding: "40px",
+                    background: "#f7f8fa",
+                    fontFamily: "Inter, sans-serif"
+                }}
+            >
+                <div
+                    style={{
+                        maxWidth: "680px",
+                        margin: "0 auto",
+                        background: "white",
+                        padding: "32px",
+                        borderRadius: "16px",
+                        border: "1px solid #dedede"
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            padding: "7px 12px",
+                            borderRadius: "20px",
+                            background: "#ecfdf3",
+                            color: "#15803d",
+                            fontSize: "12px",
+                            fontWeight: 700,
+                            marginBottom: "16px"
+                        }}
+                    >
+                        <span>✓</span>
+                        VERIFIED INSTITUTION
                     </div>
 
-                    <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
-                        <span style={{ fontSize: "13px", fontWeight: 600, color: "#475569", marginRight: "8px" }}>Filter Sector:</span>
-                        {sectors.map((sec) => (
-                            <button
-                                key={sec}
-                                onClick={() => setSelectedSector(sec)}
+                    <p
+                        style={{
+                            color: "#2563eb",
+                            fontWeight: 700,
+                            fontSize: "11px",
+                            letterSpacing: "1.8px",
+                            marginBottom: "6px"
+                        }}
+                    >
+                        INSTITUTION PORTAL
+                    </p>
+
+                    <h1
+                        style={{
+                            marginTop: "4px",
+                            marginBottom: "10px"
+                        }}
+                    >
+                        Institutional Dashboard
+                    </h1>
+
+                    <p
+                        style={{
+                            color: "#666",
+                            lineHeight: 1.6
+                        }}
+                    >
+                        Your institutional account has passed the initial
+                        verification checks and is authorised to access the
+                        resource provider portal.
+                    </p>
+
+                    <div
+                        style={{
+                            marginTop: "24px",
+                            padding: "18px",
+                            borderRadius: "12px",
+                            background: "#f7f8fa",
+                            border: "1px solid #eeeeee"
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "150px 1fr",
+                                gap: "12px",
+                                fontSize: "13px"
+                            }}
+                        >
+                            <strong>Institutional Email</strong>
+                            <span>{email}</span>
+
+                            <strong>Registration ID</strong>
+                            <span>{registrationId}</span>
+
+                            <strong>Institution Type</strong>
+                            <span>{institutionType}</span>
+
+                            <strong>Verification</strong>
+                            <span
                                 style={{
-                                    padding: "6px 14px",
-                                    borderRadius: "20px",
-                                    border: "1px solid",
-                                    borderColor: selectedSector === sec ? "#2563eb" : "#cbd5e1",
-                                    background: selectedSector === sec ? "#eff6ff" : "#ffffff",
-                                    color: selectedSector === sec ? "#2563eb" : "#475569",
-                                    fontWeight: selectedSector === sec ? 600 : 400,
-                                    fontSize: "13px",
-                                    cursor: "pointer"
+                                    color: "#15803d",
+                                    fontWeight: 700
                                 }}
                             >
-                                {sec}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                                Verified
+                            </span>
 
-                {/* Resource Listings */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: "20px" }}>
-                    {filteredResources.map((resource) => (
-                        <div key={resource.id} style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                            <div>
-                                {/* Institution Verification Badge */}
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
-                                    <span style={{ fontSize: "11px", fontWeight: 700, color: "#2563eb", background: "#eff6ff", padding: "2px 8px", borderRadius: "4px" }}>
-                                        {resource.sector}
-                                    </span>
-                                    {resource.institutionVerified && (
-                                        <span style={{ fontSize: "11px", color: "#166534", background: "#dcfce7", padding: "2px 8px", borderRadius: "4px", fontWeight: 600 }}>
-                                            ✓ Institution Verified
-                                        </span>
-                                    )}
-                                </div>
-
-                                <h3 style={{ margin: "0 0 4px", fontSize: "16px", color: "#0f172a" }}>{resource.equipmentName}</h3>
-                                <p style={{ margin: "0 0 12px", fontSize: "13px", color: "#64748b" }}>{resource.manufacturer} - {resource.model}</p>
-
-                                {/* Structured Metadata List */}
-                                <div style={{ fontSize: "12px", display: "flex", flexDirection: "column", gap: "6px", color: "#334155", background: "#f8fafc", padding: "12px", borderRadius: "8px", border: "1px solid #f1f5f9" }}>
-                                    <div><strong>Institution:</strong> {resource.institution}</div>
-                                    <div><strong>Facility:</strong> {resource.facility}</div>
-                                    <div><strong>Location:</strong> {resource.location}</div>
-                                    <div><strong>Technical Specs:</strong> {resource.technicalSpecs}</div>
-                                    <div><strong>Operator Req:</strong> {resource.operatorRequirement}</div>
-                                    <div><strong>Calibration:</strong> {resource.certificationStatus}</div>
-                                    <div><strong>Pricing:</strong> {resource.pricing}</div>
-                                    <div><strong>Manager:</strong> {resource.responsibleManager}</div>
-                                </div>
-                            </div>
-
-                            <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                <span style={{ fontSize: "12px", fontWeight: 600, color: resource.availability ? "#166534" : "#991b1b" }}>
-                                    {resource.availability ? "Available for Request" : "Currently Occupied"}
-                                </span>
-                                <button
-                                    onClick={() => handleOpenBooking(resource)}
-                                    disabled={!resource.availability}
-                                    style={{
-                                        padding: "8px 16px",
-                                        background: resource.availability ? "#0f172a" : "#cbd5e1",
-                                        color: "#ffffff",
-                                        border: "none",
-                                        borderRadius: "6px",
-                                        fontWeight: 600,
-                                        fontSize: "13px",
-                                        cursor: resource.availability ? "pointer" : "not-allowed"
-                                    }}
-                                >
-                                    Request Verification
-                                </button>
-                            </div>
+                            <strong>Admin Approval</strong>
+                            <span
+                                style={{
+                                    color: "#15803d",
+                                    fontWeight: 700
+                                }}
+                            >
+                                Approved
+                            </span>
                         </div>
-                    ))}
+                    </div>
+
+                    <div
+                        style={{
+                            marginTop: "24px",
+                            padding: "16px",
+                            borderRadius: "12px",
+                            background: "#f8fafc",
+                            border: "1px solid #e2e8f0"
+                        }}
+                    >
+                        <p
+                            style={{
+                                margin: "0 0 8px",
+                                fontSize: "12px",
+                                fontWeight: 700,
+                                color: "#333"
+                            }}
+                        >
+                            RESOURCE PROVIDER ACCESS
+                        </p>
+
+                        <p
+                            style={{
+                                margin: 0,
+                                fontSize: "12px",
+                                lineHeight: 1.5,
+                                color: "#666"
+                            }}
+                        >
+                            Resource listings and sensitive equipment access
+                            remain subject to resource-level verification,
+                            availability, approval and responsible facility
+                            manager authorisation.
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => {
+                            setIsLoggedIn(false);
+                            setIsVerified(false);
+                        }}
+                        style={{
+                            marginTop: "20px",
+                            padding: "10px 20px",
+                            background: "#171717",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "8px",
+                            cursor: "pointer",
+                            fontWeight: 600
+                        }}
+                    >
+                        Log Out
+                    </button>
                 </div>
             </main>
+        );
+    }
 
-            {/* Structured Booking Request Modal */}
-            {selectedResource && (
-                <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15, 23, 42, 0.6)", display: "flex", alignItems: "center", justifyCenter: "center", padding: "16px", zIndex: 1000 }}>
-                    <div style={{ background: "#ffffff", borderRadius: "12px", maxWidth: "520px", width: "100%", margin: "0 auto", padding: "24px", position: "relative", maxHeight: "90vh", overflowY: "auto" }}>
-                        <button
-                            onClick={() => setSelectedResource(null)}
-                            style={{ position: "absolute", top: "16px", right: "16px", border: "none", background: "none", fontSize: "18px", cursor: "pointer", color: "#64748b" }}
-                        >
-                            ✕
-                        </button>
+    // LOGIN PAGE
+    return (
+        <>
+            <style>{`
+                * {
+                    box-sizing: border-box;
+                }
 
-                        {bookingStep === "form" ? (
-                            <form onSubmit={handleBookingSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                body {
+                    margin: 0;
+                    font-family: Inter, -apple-system, BlinkMacSystemFont,
+                        "Segoe UI", sans-serif;
+                    background: #f7f8fa;
+                    color: #171717;
+                }
+
+                .login-page {
+                    width: 100%;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 32px 20px;
+                    background: #f7f8fa;
+                }
+
+                .login-wrapper {
+                    width: 100%;
+                    max-width: 480px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 22px;
+                }
+
+                .login-header {
+                    text-align: center;
+                }
+
+                .eyebrow {
+                    margin: 0 0 6px;
+                    font-size: 11px;
+                    font-weight: 700;
+                    letter-spacing: 1.8px;
+                    color: #2563eb;
+                    text-transform: uppercase;
+                }
+
+                .login-header h1 {
+                    margin: 0;
+                    font-size: 32px;
+                    letter-spacing: -1.2px;
+                    font-weight: 750;
+                    color: #171717;
+                }
+
+                .subtitle {
+                    margin: 8px 0 0;
+                    color: #777;
+                    font-size: 14px;
+                    line-height: 1.5;
+                }
+
+                .card {
+                    position: relative;
+                    width: 100%;
+                    overflow: hidden;
+                    border: 1px solid #dedede;
+                    border-radius: 16px;
+                    background: #ffffff;
+                    box-shadow:
+                        0 4px 12px rgba(0, 0, 0, 0.03);
+                }
+
+                .card-content {
+                    padding: 26px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .verification-banner {
+                    display: flex;
+                    gap: 10px;
+                    align-items: flex-start;
+                    padding: 13px 14px;
+                    border-radius: 10px;
+                    background: #f8fafc;
+                    border: 1px solid #e5e7eb;
+                }
+
+                .verification-icon {
+                    width: 22px;
+                    height: 22px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                    background: #171717;
+                    color: white;
+                    font-size: 11px;
+                    font-weight: 700;
+                    flex-shrink: 0;
+                }
+
+                .verification-banner strong {
+                    display: block;
+                    font-size: 12px;
+                    margin-bottom: 3px;
+                }
+
+                .verification-banner p {
+                    margin: 0;
+                    color: #666;
+                    font-size: 11px;
+                    line-height: 1.45;
+                }
+
+                .login-form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                }
+
+                .form-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                }
+
+                .form-group label {
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #333;
+                }
+
+                .required {
+                    color: #dc2626;
+                }
+
+                .input-box {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    height: 44px;
+                    padding: 0 14px;
+                    border: 1px solid #dedede;
+                    border-radius: 12px;
+                    background: white;
+                    transition:
+                        border-color 0.2s ease,
+                        box-shadow 0.2s ease;
+                }
+
+                .input-box:focus-within {
+                    border-color: #2563eb;
+                    box-shadow:
+                        0 0 0 3px rgba(37, 99, 235, 0.08);
+                }
+
+                .input-box span {
+                    margin-right: 9px;
+                    font-size: 15px;
+                    color: #777;
+                }
+
+                .input-box input {
+                    width: 100%;
+                    border: none;
+                    outline: none;
+                    background: transparent;
+                    color: #222;
+                    font-size: 14px;
+                }
+
+                select {
+                    width: 100%;
+                    height: 44px;
+                    padding: 0 12px;
+                    border: 1px solid #dedede;
+                    border-radius: 12px;
+                    background: white;
+                    color: #222;
+                    font-size: 14px;
+                    outline: none;
+                    cursor: pointer;
+                }
+
+                select:focus {
+                    border-color: #2563eb;
+                    box-shadow:
+                        0 0 0 3px rgba(37, 99, 235, 0.08);
+                }
+
+                .field-help {
+                    margin: 0;
+                    font-size: 10px;
+                    color: #888;
+                    line-height: 1.4;
+                }
+
+                .forgot-link {
+                    font-size: 12px;
+                    color: #2563eb;
+                    text-decoration: none;
+                    font-weight: 500;
+                }
+
+                .forgot-link:hover {
+                    text-decoration: underline;
+                }
+
+                .label-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+                .declaration {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 9px;
+                    padding: 12px;
+                    border: 1px solid #eeeeee;
+                    border-radius: 10px;
+                    background: #fafafa;
+                    cursor: pointer;
+                }
+
+                .declaration input {
+                    margin-top: 2px;
+                    accent-color: #2563eb;
+                    width: 15px;
+                    height: 15px;
+                    flex-shrink: 0;
+                }
+
+                .declaration span {
+                    color: #555;
+                    font-size: 11px;
+                    line-height: 1.45;
+                }
+
+                .error-message {
+                    padding: 11px 12px;
+                    border-radius: 9px;
+                    background: #fef2f2;
+                    border: 1px solid #fecaca;
+                    color: #b91c1c;
+                    font-size: 11px;
+                    line-height: 1.45;
+                }
+
+                .submit-button {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    width: 100%;
+                    min-height: 46px;
+                    padding: 0 16px;
+                    border: none;
+                    border-radius: 10px;
+                    background: #171717;
+                    color: white;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 4px;
+                    transition:
+                        background 0.2s ease,
+                        transform 0.2s ease;
+                }
+
+                .submit-button:hover {
+                    background: #2563eb;
+                    transform: translateY(-1px);
+                }
+
+                .card-footer {
+                    padding-top: 16px;
+                    border-top: 1px solid #eeeeee;
+                }
+
+                .support-info span {
+                    color: #999;
+                    font-size: 9px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.6px;
+                }
+
+                .support-info p {
+                    margin: 4px 0 0;
+                    color: #666;
+                    font-size: 12px;
+                    line-height: 1.4;
+                }
+
+                .system-status {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    font-size: 12px;
+                    color: #666;
+                }
+
+                .status-dot {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background-color: #15803d;
+                }
+
+                @media (max-width: 520px) {
+                    .login-page {
+                        padding: 20px 12px;
+                    }
+
+                    .card-content {
+                        padding: 20px;
+                    }
+
+                    .login-header h1 {
+                        font-size: 28px;
+                    }
+                }
+            `}</style>
+
+            <main className="login-page">
+                <div className="login-wrapper">
+
+                    <div className="login-header">
+                        <p className="eyebrow">
+                            INSTITUTION PORTAL
+                        </p>
+
+                        <h1>
+                            Institutional Login
+                        </h1>
+
+                        <p className="subtitle">
+                            Verified institutions can securely access the
+                            resource provider platform.
+                        </p>
+                    </div>
+
+                    <div className="card">
+                        <div className="card-content">
+
+                            <div className="verification-banner">
+                                <div className="verification-icon">
+                                    ✓
+                                </div>
+
                                 <div>
-                                    <span style={{ fontSize: "11px", color: "#2563eb", fontWeight: 700, letterSpacing: "1px" }}>REQUEST PIPELINE</span>
-                                    <h2 style={{ margin: "4px 0", fontSize: "18px" }}>Resource Booking Form</h2>
-                                    <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>Target: {selectedResource.equipmentName} ({selectedResource.institution})</p>
+                                    <strong>
+                                        Institution verification required
+                                    </strong>
+
+                                    <p>
+                                        Access is restricted to officially
+                                        registered and administrator-approved
+                                        institutions.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <form
+                                className="login-form"
+                                onSubmit={handleSubmit}
+                            >
+
+                                <div className="form-group">
+                                    <label htmlFor="email">
+                                        Institutional Email{" "}
+                                        <span className="required">*</span>
+                                    </label>
+
+                                    <div className="input-box">
+                                        <span>✉</span>
+
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            required
+                                            placeholder="researcher@institution.edu"
+                                            value={email}
+                                            onChange={(e) =>
+                                                setEmail(e.target.value)
+                                            }
+                                        />
+                                    </div>
+
+                                    <p className="field-help">
+                                        Use your official institutional
+                                        email. Personal email providers are
+                                        not accepted.
+                                    </p>
                                 </div>
 
-                                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                                    <label style={{ fontSize: "12px", fontWeight: 600 }}>Authenticated Researcher Name</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="Dr. Jane Doe"
-                                        value={bookingData.researcherName}
-                                        onChange={(e) => setBookingData({ ...bookingData, researcherName: e.target.value })}
-                                        style={{ padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontSize: "13px" }}
-                                    />
+                                <div className="form-group">
+                                    <label htmlFor="registrationId">
+                                        Institution Registration ID{" "}
+                                        <span className="required">*</span>
+                                    </label>
+
+                                    <div className="input-box">
+                                        <span>▣</span>
+
+                                        <input
+                                            id="registrationId"
+                                            type="text"
+                                            required
+                                            placeholder="Official registration / institution ID"
+                                            value={registrationId}
+                                            onChange={(e) =>
+                                                setRegistrationId(
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    <p className="field-help">
+                                        This will be checked against the
+                                        institution's official registration
+                                        information.
+                                    </p>
                                 </div>
 
-                                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                                    <label style={{ fontSize: "12px", fontWeight: 600 }}>Institutional Email Domain</label>
-                                    <input
-                                        type="email"
-                                        required
-                                        placeholder="researcher@verified-domain.edu"
-                                        value={bookingData.researcherEmail}
-                                        onChange={(e) => setBookingData({ ...bookingData, researcherEmail: e.target.value })}
-                                        style={{ padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontSize: "13px" }}
-                                    />
-                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="institutionType">
+                                        Institution Type{" "}
+                                        <span className="required">*</span>
+                                    </label>
 
-                                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                                    <label style={{ fontSize: "12px", fontWeight: 600 }}>Research Purpose & Protocol Justification</label>
-                                    <textarea
-                                        required
-                                        rows={3}
-                                        placeholder="Specify project goals, regulatory approvals, and specialized requirements..."
-                                        value={bookingData.purpose}
-                                        onChange={(e) => setBookingData({ ...bookingData, purpose: e.target.value })}
-                                        style={{ padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontSize: "13px" }}
-                                    />
-                                </div>
-
-                                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                                    <label style={{ fontSize: "12px", fontWeight: 600 }}>Requested Access Duration</label>
                                     <select
-                                        value={bookingData.duration}
-                                        onChange={(e) => setBookingData({ ...bookingData, duration: e.target.value })}
-                                        style={{ padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontSize: "13px" }}
+                                        id="institutionType"
+                                        required
+                                        value={institutionType}
+                                        onChange={(e) =>
+                                            setInstitutionType(
+                                                e.target.value
+                                            )
+                                        }
                                     >
-                                        <option>1 Day Slot</option>
-                                        <option>3 Days Block</option>
-                                        <option>1 Week Dedicated</option>
+                                        <option value="">
+                                            Select institution type
+                                        </option>
+
+                                        <option value="Research Institution">
+                                            Research Institution
+                                        </option>
+
+                                        <option value="University">
+                                            University
+                                        </option>
+
+                                        <option value="College">
+                                            College
+                                        </option>
+
+                                        <option value="Hospital">
+                                            Hospital
+                                        </option>
+
+                                        <option value="Laboratory">
+                                            Laboratory
+                                        </option>
+
+                                        <option value="Government Institution">
+                                            Government Institution
+                                        </option>
                                     </select>
                                 </div>
 
-                                <div style={{ background: "#f8fafc", padding: "12px", borderRadius: "8px", border: "1px solid #e2e8f0", fontSize: "11px", color: "#475569" }}>
-                                    <strong>Approval Workflow:</strong> Request → Institutional Verification Check → Sent to <i>{selectedResource.responsibleManager}</i> for approval.
+                                <div className="form-group">
+                                    <div className="label-row">
+                                        <label htmlFor="password">
+                                            Password{" "}
+                                            <span className="required">*</span>
+                                        </label>
+
+                                        <a
+                                            href="#forgot"
+                                            className="forgot-link"
+                                        >
+                                            Forgot password?
+                                        </a>
+                                    </div>
+
+                                    <div className="input-box">
+                                        <span>🔒</span>
+
+                                        <input
+                                            id="password"
+                                            type="password"
+                                            required
+                                            placeholder="••••••••"
+                                            value={password}
+                                            onChange={(e) =>
+                                                setPassword(e.target.value)
+                                            }
+                                        />
+                                    </div>
                                 </div>
+
+                                <label className="declaration">
+                                    <input
+                                        type="checkbox"
+                                        checked={declaration}
+                                        onChange={(e) =>
+                                            setDeclaration(
+                                                e.target.checked
+                                            )
+                                        }
+                                    />
+
+                                    <span>
+                                        I confirm that this account
+                                        represents an officially registered
+                                        institution and that the information
+                                        provided is accurate. I understand
+                                        that access is subject to
+                                        administrator verification.
+                                    </span>
+                                </label>
+
+                                {error && (
+                                    <div className="error-message">
+                                        {error}
+                                    </div>
+                                )}
 
                                 <button
                                     type="submit"
-                                    style={{ marginTop: "8px", padding: "10px", background: "#2563eb", color: "#ffffff", border: "none", borderRadius: "6px", fontWeight: 600, cursor: "pointer" }}
+                                    className="submit-button"
                                 >
-                                    Submit Request to Resource Owner
+                                    Verify Institution & Sign In
+                                    <span>→</span>
                                 </button>
+
                             </form>
-                        ) : (
-                            <div style={{ textAlign: "center", padding: "16px 0" }}>
-                                <div style={{ fontSize: "36px", marginBottom: "8px" }}>✅</div>
-                                <h3 style={{ margin: "0 0 8px" }}>Request Submitted for Approval</h3>
-                                <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.5 }}>
-                                    Your request has been routed to <strong>{selectedResource.responsibleManager}</strong> at {selectedResource.institution}. You will receive a notification once institutional verification and access checks are complete.
-                                </p>
-                                <button
-                                    onClick={() => setSelectedResource(null)}
-                                    style={{ marginTop: "16px", padding: "8px 20px", background: "#0f172a", color: "#ffffff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}
-                                >
-                                    Return to Dashboard
-                                </button>
+
+                            <div className="card-footer">
+                                <div className="support-info">
+                                    <span>
+                                        VERIFICATION & SUPPORT
+                                    </span>
+
+                                    <p>
+                                        Institution verification may require
+                                        official registration information and
+                                        administrator approval. For
+                                        assistance, contact the platform
+                                        administrator.
+                                    </p>
+                                </div>
                             </div>
-                        )}
+
+                        </div>
                     </div>
+
+                    <div className="system-status">
+                        <span className="status-dot"></span>
+                        <span>
+                            Secure institutional access
+                        </span>
+                    </div>
+
                 </div>
-            )}
-        </div>
+            </main>
+        </>
     );
 };
 
-export default ReceiverLandingPage;
+export default Login;
