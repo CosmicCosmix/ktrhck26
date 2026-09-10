@@ -1,0 +1,103 @@
+@page
+@model Forex.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="font-weight: 300; margin: 0;">Institute Dashboard</h2>
+    <div style="display: flex; gap: 1rem;">
+        <span style="color: var(--text-secondary); font-size: 0.9rem;">All time</span>
+        <button class="btn btn-outline" style="padding: 0.25rem 1rem;">Export</button>
+    </div>
+</div>
+
+<div class="grid" style="grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+    <!-- Main Chart Card -->
+    <div class="card" style="display: flex; flex-direction: column;">
+        <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-weight: 500;">Daily Utilization</h3>
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0; margin-bottom: 2rem;">How much am I using my equipment?</p>
+        
+        <!-- Mock Bar Chart -->
+        <div style="height: 200px; border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-end; justify-content: space-between; padding-left: 1rem; gap: 4px; margin-bottom: 2rem;">
+            @for (int i = 0; i < 30; i++)
+            {
+                var height = (i % 7 == 0 || i % 7 == 6) ? 20 : new Random(i).Next(40, 90);
+                <div style="width: 100%; background-color: #ffffff; height: @(height)%; opacity: 0.8;"></div>
+            }
+        </div>
+        
+        <div style="font-weight: 500; font-size: 0.9rem; margin-bottom: 0.5rem;">Usage Breakdown</div>
+        <div style="display: flex; height: 30px; border-radius: var(--border-radius); overflow: hidden;">
+            <div style="width: 38%; background-color: #ffffff; color: #000000; display: flex; align-items: center; padding-left: 1rem; font-size: 0.8rem; font-weight: 600;">In Use (38%)</div>
+            <div style="width: 62%; background-color: #333333; color: #ffffff; display: flex; align-items: center; padding-left: 1rem; font-size: 0.8rem;">Free (62%)</div>
+        </div>
+    </div>
+    
+    <!-- Side Stats Card -->
+    <div class="card">
+        <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-weight: 500;">Equipment Utilization</h3>
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0; margin-bottom: 2rem;">How much of my equipment is under- or over-utilized?</p>
+        
+        <div style="height: 120px; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; position: relative;">
+            <svg viewBox="0 0 100 50" preserveAspectRatio="none" style="width: 100%; height: 100%; opacity: 0.8;">
+                <polygon points="0,50 0,10 10,25 20,40 30,45 100,48 100,50" fill="#ffffff" />
+            </svg>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">
+            <span style="font-weight: 500;">Total Equipment:</span>
+            <span>8,425</span>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; color: var(--text-secondary);">
+                <span>Under Utilized:</span>
+                <span style="color: #ffffff;">74%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; color: var(--text-secondary);">
+                <span>Over Utilized:</span>
+                <span style="color: #ffffff;">5%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; color: var(--text-secondary);">
+                <span>Best Utilized:</span>
+                <span style="color: #ffffff;">21%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 style="font-weight: 400; margin-bottom: 1.5rem;">Network Facilities</h3>
+<div class="grid" style="gap: 1.5rem;">
+    @{
+        var facilities = new[] {
+            new { Name = "Brookline Memorial Hospital", Total = 1310, InUse = 38 },
+            new { Name = "Downs Lane Hospital", Total = 955, InUse = 32 },
+            new { Name = "Eastham Memorial Hospital", Total = 2263, InUse = 42 },
+            new { Name = "Northlands Health System", Total = 508, InUse = 36 },
+            new { Name = "South Bay Harbor Hospital", Total = 3102, InUse = 30 },
+            new { Name = "Western Hills Hospital", Total = 287, InUse = 41 }
+        };
+    }
+    
+    @foreach (var fac in facilities)
+    {
+        <div class="card" style="padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0; font-weight: 500;">@fac.Name</h4>
+                <div style="text-align: right; font-size: 0.85rem;">
+                    <div>Total: @fac.Total</div>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.25rem;">
+                <span style="color: #ffffff;">In Use (@fac.InUse%)</span>
+                <span style="color: var(--text-secondary);">Free (@(100 - fac.InUse)%)</span>
+            </div>
+            <div style="display: flex; height: 6px; border-radius: 3px; overflow: hidden;">
+                <div style="width: @fac.InUse%; background-color: #ffffff;"></div>
+                <div style="width: @(100 - fac.InUse)%; background-color: #333333;"></div>
+            </div>
+        </div>
+    }
+</div>
