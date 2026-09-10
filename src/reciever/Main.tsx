@@ -110,7 +110,7 @@ function Main() {
   const [items, setItems] = useState(cards);
 
   useEffect(() => {
-    fetch('/api/ResourceAllocation')
+    fetch('/api/Equipment')
       .then((res) => {
         if (!res.ok) throw new Error('API unavailable');
         return res.json();
@@ -120,18 +120,18 @@ function Main() {
           const mapped = data.map((d) => ({
             id: d.id,
             name: d.name,
-            institute: d.institution || "Unknown Institute",
-            location: d.location || "Unknown",
-            image: d.images?.[0] || cards[0].image,
+            institute: "Verified Organization", // Extend API to include Organization Name
+            location: "Network Facility",
+            image: d.imageUrl || cards[0].image,
             category: d.category,
-            details: d.notes || d.name,
-            use: d.specs?.Use || "General",
-            operator: d.operatorRequired ? "Operator Available" : "No Operator",
-            availability: "Mon - Fri",
+            details: d.description || d.name,
+            use: d.specifications?.Use || "General",
+            operator: d.specifications?.OperatorRequired ? "Operator Available" : "No Operator",
+            availability: "Mon - Fri", 
             time: "9:00 AM - 5:00 PM",
             minimum: "1 hour",
             maximum: "8 hours",
-            price: `?${d.ratePerHour} / hour`,
+            price: `₹${d.hourlyRate} / hour`,
           }));
           setItems(mapped);
         }

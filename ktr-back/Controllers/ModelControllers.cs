@@ -3,9 +3,19 @@ using ktr_back.Services;
 
 namespace ktr_back.Controllers
 {
-    public class AccessGrantsController : BaseCrudController<AccessGrant>
+    public class OrganizationsController : BaseCrudController<Organization>
     {
-        public AccessGrantsController(IGenericSupabaseService<AccessGrant> service) : base(service) { }
+        public OrganizationsController(IGenericSupabaseService<Organization> service) : base(service) { }
+    }
+    
+    public class EquipmentController : BaseCrudController<Equipment>
+    {
+        public EquipmentController(IGenericSupabaseService<Equipment> service) : base(service) { }
+    }
+
+    public class EquipmentAvailabilityController : BaseCrudController<EquipmentAvailability>
+    {
+        public EquipmentAvailabilityController(IGenericSupabaseService<EquipmentAvailability> service) : base(service) { }
     }
     
     public class BookingsController : BaseCrudController<Booking>
@@ -13,23 +23,13 @@ namespace ktr_back.Controllers
         public BookingsController(IGenericSupabaseService<Booking> service) : base(service) { }
     }
     
-    public class EscrowAccountsController : BaseCrudController<EscrowAccount>
+    public class TransactionsController : BaseCrudController<Transaction>
     {
-        public EscrowAccountsController(IGenericSupabaseService<EscrowAccount> service) : base(service) { }
+        public TransactionsController(IGenericSupabaseService<Transaction> service) : base(service) { }
     }
     
-    public class InstitutionsController : BaseCrudController<Institution>
+    public class UsageRecordsController : BaseCrudController<UsageRecord>
     {
-        public InstitutionsController(IGenericSupabaseService<Institution> service) : base(service) { }
-    }
-    
-    public class PaymentTransactionsController : BaseCrudController<PaymentTransaction>
-    {
-        public PaymentTransactionsController(IGenericSupabaseService<PaymentTransaction> service) : base(service) { }
-    }
-    
-    public class ResourceAllocationsController : BaseCrudController<ResourceAllocation>
-    {
-        public ResourceAllocationsController(IGenericSupabaseService<ResourceAllocation> service) : base(service) { }
+        public UsageRecordsController(IGenericSupabaseService<UsageRecord> service) : base(service) { }
     }
 }

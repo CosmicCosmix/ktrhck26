@@ -3,20 +3,17 @@ using Postgrest.Models;
 
 namespace ktr_back.Models
 {
-    [Table("bookings")]
-    public class Booking : BaseModel
+    [Table("usage_records")]
+    public class UsageRecord : BaseModel
     {
         [PrimaryKey("id", false)] public string Id { get; set; } = string.Empty;
         [Column("equipment_id")] public string EquipmentId { get; set; } = string.Empty;
-        [Column("renter_organization_id")] public string RenterOrganizationId { get; set; } = string.Empty;
+        [Column("booking_id")] public string? BookingId { get; set; }
+        [Column("organization_id")] public string? OrganizationId { get; set; }
+        [Column("usage_type")] public string UsageType { get; set; } = string.Empty;
         [Column("start_time")] public DateTime StartTime { get; set; }
         [Column("end_time")] public DateTime EndTime { get; set; }
         [Column("duration_hours")] public decimal DurationHours { get; set; }
-        [Column("hourly_rate")] public decimal HourlyRate { get; set; }
-        [Column("total_amount")] public decimal TotalAmount { get; set; }
-        [Column("purpose")] public string? Purpose { get; set; }
-        [Column("status")] public string Status { get; set; } = "pending";
         [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        [Column("updated_at")] public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

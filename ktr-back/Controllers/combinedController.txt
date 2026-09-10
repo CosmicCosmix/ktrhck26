@@ -1,0 +1,123 @@
+===== BaseCrudController.cs ===== 
+using ktr_back.Services;
+using Microsoft.AspNetCore.Mvc;
+using Postgrest.Models;
+
+namespace ktr_back.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public abstract class BaseCrudController<T> : ControllerBase where T : BaseModel, new()
+    {
+        protected readonly IGenericSupabaseService<T> _service;
+
+        public BaseCrudController(IGenericSupabaseService<T> service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<T>>> GetAll()
+        {
+            var items = await _service.GetAllAsync();
+            return Ok(items);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<T>> GetById(string id)
+        {
+            var item = await _service.GetByIdAsync(id);
+            if (item == null)
+                return NotFound();
+            return Ok(item);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<T>> Create([FromBody] T entity)
+        {
+            var created = await _service.CreateAsync(entity);
+            return Ok(created);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<T>> Update(string id, [FromBody] T entity)
+        {
+            // Set id on entity if possible, or assume it's already set in the body
+            var updated = await _service.UpdateAsync(entity);
+            return Ok(updated);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+    }
+}
+
+===== ModelControllers.cs ===== 
+using ktr_back.Models;
+using ktr_back.Services;
+
+namespace ktr_back.Controllers
+{
+    public class AccessGrantsController : BaseCrudController<AccessGrant>
+    {
+        public AccessGrantsController(IGenericSupabaseService<AccessGrant> service) : base(service) { }
+    }
+    
+    public class BookingsController : BaseCrudController<Booking>
+    {
+        public BookingsController(IGenericSupabaseService<Booking> service) : base(service) { }
+    }
+    
+    public class EscrowAccountsController : BaseCrudController<EscrowAccount>
+    {
+        public EscrowAccountsController(IGenericSupabaseService<EscrowAccount> service) : base(service) { }
+    }
+    
+    public class InstitutionsController : BaseCrudController<Institution>
+    {
+        public InstitutionsController(IGenericSupabaseService<Institution> service) : base(service) { }
+    }
+    
+    public class PaymentTransactionsController : BaseCrudController<PaymentTransaction>
+    {
+        public PaymentTransactionsController(IGenericSupabaseService<PaymentTransaction> service) : base(service) { }
+    }
+    
+    public class ResourceAllocationsController : BaseCrudController<ResourceAllocation>
+    {
+        public ResourceAllocationsController(IGenericSupabaseService<ResourceAllocation> service) : base(service) { }
+    }
+}
+
+===== WeatherForecastController.cs ===== 
+using Microsoft.AspNetCore.Mvc;
+
+namespace ktr_back.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class WeatherForecastController : ControllerBase
+    {
+        private static readonly string[] Summaries =
+        [
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        ];
+
+        [HttpGet(Name = "GetWeatherForecast")]
+        public IEnumerable<WeatherForecast> Get()
+        {
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+    }
+}
+

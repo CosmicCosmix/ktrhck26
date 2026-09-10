@@ -8,7 +8,7 @@ export const EquipmentList: React.FC = () => {
   const [selectedMachine, setSelectedMachine] = useState<EquipmentItem | null>(null);
 
   useEffect(() => {
-    fetch('/api/ResourceAllocation')
+    fetch('/api/Equipment')
       .then((res) => {
         if (!res.ok) throw new Error('API unavailable');
         return res.json();
@@ -18,14 +18,14 @@ export const EquipmentList: React.FC = () => {
           const mapped = data.map((d) => ({
             id: d.id,
             name: d.name,
-            category: d.category as any,
-            modelNumber: d.specs?.Model || 'Unknown',
-            status: d.status === 'Available' ? 'Active' : 'Maintenance',
-            ratePerHour: d.ratePerHour,
-            totalEarningsAlgo: d.totalCostAlgo,
+            category: d.category,
+            modelNumber: d.model || 'Unknown',
+            status: d.status === 'available' ? 'Active' : 'Maintenance',
+            ratePerHour: d.hourlyRate,
+            totalEarningsAlgo: 0, // Calculate against transaction aggregation if needed
             utilizationRate: 0,
-            location: d.location,
-            imageUrl: d.images?.[0] || MOCK_EQUIPMENT[0].imageUrl,
+            location: 'Assigned Facility', // Extend API to join Organization location data
+            imageUrl: d.imageUrl || MOCK_EQUIPMENT[0].imageUrl,
           }));
           setItems(mapped);
         }
