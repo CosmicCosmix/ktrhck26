@@ -1,90 +1,69 @@
-< !DOCTYPE html >
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Institution Portal Login</title>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-            <link
-                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;750&display=swap"
-                rel="stylesheet"
-            />
-            <link rel="stylesheet" href="style.css" />
-        </head>
-        <body>
-            <main class="main-page">
-                <div class="login-wrapper">
+import React, { useState } from "react";
 
-                    <!-- Top Brand Header -->
-                    <div class="login-header">
-                        <p class="eyebrow">INSTITUTION PORTAL</p>
-                        <h1>Welcome back</h1>
-                        <p class="subtitle">Enter your institutional credentials to access your account.</p>
-                    </div>
+export const Login: React.FC = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-                    <!-- Main Login Form Card -->
-                    <div class="card login-card">
-                        <div class="card-content">
-                            <form class="login-form" onsubmit="event.preventDefault();">
+    return (
+        <>
+            <style>{`
+        .login-page {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f7f8fa;
+          font-family: Inter, sans-serif;
+        }
+        .card {
+          background: white;
+          padding: 24px;
+          border-radius: 16px;
+          border: 1px solid #dedede;
+          width: 100%;
+          max-width: 400px;
+        }
+        .input-box {
+          width: 100%;
+          height: 44px;
+          border: 1px solid #dedede;
+          border-radius: 12px;
+          margin-bottom: 12px;
+          padding: 0 12px;
+        }
+        .btn {
+          width: 100%;
+          height: 44px;
+          background: #171717;
+          color: white;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+      `}</style>
 
-                                <div class="form-group">
-                                    <label for="email">Institutional Email</label>
-                                    <div class="input-box">
-                                        <span class="icon">✉</span>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            placeholder="username@institution.edu"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="label-row">
-                                        <label for="password">Password</label>
-                                        <a href="#" class="forgot-link">Forgot password?</a>
-                                    </div>
-                                    <div class="input-box">
-                                        <span class="icon">🔒</span>
-                                        <input
-                                            type="password"
-                                            id="password"
-                                            placeholder="••••••••"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="form-options">
-                                    <label class="remember-me">
-                                        <input type="checkbox" />
-                                        <span>Remember this device</span>
-                                    </label>
-                                </div>
-
-                                <button type="submit" class="submit-button">
-                                    Sign In <span>→</span>
-                                </button>
-                            </form>
-
-                            <div class="card-footer">
-                                <div class="support-info">
-                                    <span>NEED ASSISTANCE?</span>
-                                    <p>Contact IT Helpdesk at <strong>support@institution.edu</strong></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom System Status Tag -->
-                    <div class="system-status">
-                        <span class="status-dot"></span>
-                        <span>All systems operational</span>
-                    </div>
-
+            <div className="login-page">
+                <div className="card">
+                    <h2>Sign In</h2>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        className="input-box"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        className="input-box"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button className="btn">Log In</button>
                 </div>
-            </main>
-        </body>
-    </html>
+            </div>
+        </>
+    );
+};
+
+export default Login;
