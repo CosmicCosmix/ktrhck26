@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Forex</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">FOREX</a>
+            <div class="nav-links">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="segmented-control">
+                        <a asp-page="/Dashboard" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Dashboard" ? "active" : "")">Dashboard</a>
+                        <a asp-page="/Browse" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Browse" ? "active" : "")">Browse</a>
+                        <a asp-page="/Rent" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Rent" ? "active" : "")">Rent Out</a>
+                    </div>
+                    <form asp-page="/Logout" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-outline" style="margin-left:1rem;">Logout</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-page="/Login" class="btn btn-outline">Login</a>
+                    <a asp-page="/Register" class="btn btn-primary">Register</a>
+                }
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="container">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

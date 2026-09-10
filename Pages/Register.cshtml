@@ -1,0 +1,54 @@
+@page
+@model Forex.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div style="max-width: 400px; margin: 4rem auto;">
+    <h2 style="font-weight: 300; margin-bottom: 2rem; text-align: center;">Join the marketplace</h2>
+
+    @if (!ModelState.IsValid)
+    {
+        <div style="padding: 1rem; margin-bottom: 1.5rem; border: 1px solid #ff3333; border-radius: var(--border-radius); color: #ff3333; font-size: 0.9rem;">
+            Please correct the errors and try again.
+            <div asp-validation-summary="All"></div>
+        </div>
+    }
+
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="FullName">Full Name</label>
+            <input asp-for="FullName" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label asp-for="Email">Email address</label>
+            <input asp-for="Email" class="form-control" type="email" required />
+        </div>
+        <div class="form-group">
+            <label asp-for="Password">Password</label>
+            <input asp-for="Password" class="form-control" type="password" required />
+        </div>
+        <div class="form-group">
+            <label asp-for="OrganizationName">Institution / Organization Name</label>
+            <input asp-for="OrganizationName" class="form-control" placeholder="e.g. Apex Research Labs" required />
+            <small style="color: var(--text-secondary); display: block; margin-top: 0.25rem;">Required for verification</small>
+        </div>
+        <div class="form-group">
+            <label asp-for="OrganizationType">Sector</label>
+            <select asp-for="OrganizationType" class="form-control" style="background-color: var(--bg-color);" required>
+                <option value="">Select a sector...</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Research">Research & Academia</option>
+                <option value="Biotech">Biotech & Pharma</option>
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create account</button>
+    </form>
+    
+    <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem; color: var(--text-secondary);">
+        Already have an account? <a asp-page="/Login" style="color: var(--text-primary);">Log in</a>
+    </div>
+</div>

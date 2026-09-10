@@ -1,0 +1,51 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="hero">
+    <h1>Turn idle infrastructure into revenue.</h1>
+    <p>The marketplace for medical and research equipment. List your idle instruments, get discovered by verified institutions, and earn from pay-per-use bookings while retaining ownership.</p>
+    
+    @if (!User.Identity?.IsAuthenticated ?? true)
+    {
+        <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+            <a asp-page="/Register" class="btn btn-primary" style="padding: 0.75rem 2rem; font-size: 1rem;">List Equipment</a>
+            <a asp-page="/Browse" class="btn btn-outline" style="padding: 0.75rem 2rem; font-size: 1rem;">Browse Equipment</a>
+        </div>
+    }
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">17.15%</div>
+        <div class="stat-desc">Of medical equipment underutilized in studied sectors</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">₹12.9 Cr</div>
+        <div class="stat-desc">Worth of equipment lying idle across audited institutions</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">30,000+</div>
+        <div class="stat-desc">Instruments across 3,800+ institutions in India</div>
+    </div>
+</div>
+
+<div style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-color);">
+    <h2 style="font-weight: 400; text-align: center; margin-bottom: 3rem;">How it works</h2>
+    <div class="grid">
+        <div class="card" style="border: none;">
+            <h3 style="font-weight: 500;">1. List</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Add your idle equipment to the marketplace. Set your own hourly or daily rates and security deposit.</p>
+        </div>
+        <div class="card" style="border: none;">
+            <h3 style="font-weight: 500;">2. Get Discovered</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Verified institutions and researchers find your equipment and request to book it for their needs.</p>
+        </div>
+        <div class="card" style="border: none;">
+            <h3 style="font-weight: 500;">3. Earn</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Approve bookings, generate revenue from pay-per-use, and retain full ownership of your assets.</p>
+        </div>
+    </div>
+</div>
