@@ -1,11 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MOCK_EQUIPMENT, type EquipmentItem } from './mockData';
 
 export const EquipmentList: React.FC = () => {
-  const [items] = useState<EquipmentItem[]>(MOCK_EQUIPMENT);
+  const [items, setItems] = useState<EquipmentItem[]>(MOCK_EQUIPMENT);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All');
   const [selectedMachine, setSelectedMachine] = useState<EquipmentItem | null>(null);
+
+  useEffect(() => {
+    fetch('/api/ResourceAllocation')
+      .then((res) => {
+        if (!res.ok) throw new Error('API unavailable');
+        return res.json();
+      })
+      .then((data: any[]) => {
+        if (data && data.length > 0) {
+          const mapped = data.map((d) => ({
+            id: d.id,
+            name: d.name,
+            category: d.category as any,
+            modelNumber: d.specs?.Model || 'Unknown',
+            status: d.status === 'Available' ? 'Active' : 'Maintenance',
+            ratePerHour: d.ratePerHour,
+            totalEarningsAlgo: d.totalCostAlgo,
+            utilizationRate: 0,
+            location: d.location,
+            imageUrl: d.images?.[0] || MOCK_EQUIPMENT[0].imageUrl,
+          }));
+          setItems(mapped);
+        }
+      })
+      .catch((err) => console.log('Falling back to mock data due to:', err.message));
+  }, []);
 
   const filtered = items.filter((item) => {
     const matchesQuery =

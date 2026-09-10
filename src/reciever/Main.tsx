@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import "./Main.css";
 
 const cards = [
@@ -106,6 +107,38 @@ const cards = [
 ];
 
 function Main() {
+  const [items, setItems] = useState(cards);
+
+  useEffect(() => {
+    fetch('/api/ResourceAllocation')
+      .then((res) => {
+        if (!res.ok) throw new Error('API unavailable');
+        return res.json();
+      })
+      .then((data: any[]) => {
+        if (data && data.length > 0) {
+          const mapped = data.map((d) => ({
+            id: d.id,
+            name: d.name,
+            institute: d.institution || "Unknown Institute",
+            location: d.location || "Unknown",
+            image: d.images?.[0] || cards[0].image,
+            category: d.category,
+            details: d.notes || d.name,
+            use: d.specs?.Use || "General",
+            operator: d.operatorRequired ? "Operator Available" : "No Operator",
+            availability: "Mon - Fri",
+            time: "9:00 AM - 5:00 PM",
+            minimum: "1 hour",
+            maximum: "8 hours",
+            price: `?${d.ratePerHour} / hour`,
+          }));
+          setItems(mapped);
+        }
+      })
+      .catch((err) => console.log('Falling back to mock data due to:', err.message));
+  }, []);
+
   return (
     <main className="main-page">
       <div className="page-shell">
@@ -149,7 +182,7 @@ function Main() {
         </div>
 
         <section className="card-grid">
-          {cards.map((card) => (
+          {items.map((card) => (
             <article className="card" key={card.id}>
 
               <div className="card-content">
