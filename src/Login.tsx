@@ -47,13 +47,11 @@ export const Login: React.FC = () => {
 
     const checkPhoneNumber = (phone: string) => {
         const cleanedPhone = phone.replace(/\s/g, "");
-
         return /^[+]?[0-9]{10,15}$/.test(cleanedPhone);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
         setError("");
 
         const trimmedInstitutionName = institutionName.trim();
@@ -97,14 +95,14 @@ export const Login: React.FC = () => {
         }
 
         if (trimmedRepresentativeName.length < 3) {
-            setError("Please enter the name of the institutional representative.");
+            setError(
+                "Please enter the name of the institutional representative."
+            );
             return;
         }
 
         if (!checkPhoneNumber(trimmedPhone)) {
-            setError(
-                "Please enter a valid representative phone number."
-            );
+            setError("Please enter a valid representative phone number.");
             return;
         }
 
@@ -123,22 +121,10 @@ export const Login: React.FC = () => {
         /*
          * PROTOTYPE VERIFICATION
          *
-         * In the production version, this information should be
-         * sent to the backend for verification.
-         *
-         * The backend should verify:
-         *
-         * 1. Institution name
-         * 2. Institution registration / identification number
-         * 3. Institutional email domain
-         * 4. Official registration details
-         * 5. Government / academic registry information
-         * 6. Representative details
-         * 7. Institutional documentation
-         * 8. Administrator approval
-         *
-         * The frontend alone should not decide whether an
-         * institution is genuinely verified.
+         * In production, these details should be sent to the backend.
+         * The backend should verify institutional registration details,
+         * institutional email, official records, documentation and
+         * administrator approval.
          */
 
         setIsVerified(true);
@@ -147,106 +133,261 @@ export const Login: React.FC = () => {
 
     if (isLoggedIn && isVerified) {
         return (
-            <main className="verified-page">
-                <div className="verified-card">
+            <>
+                <style>{`
+                    * {
+                        box-sizing: border-box;
+                    }
 
-                    <div className="verified-badge">
-                        VERIFIED INSTITUTION
-                    </div>
+                    html,
+                    body,
+                    #root {
+                        margin: 0;
+                        min-height: 100%;
+                        width: 100%;
+                    }
 
-                    <p className="eyebrow">
-                        INSTITUTION PORTAL
-                    </p>
+                    body {
+                        font-family:
+                            Inter,
+                            -apple-system,
+                            BlinkMacSystemFont,
+                            "Segoe UI",
+                            sans-serif;
+                        background: #f5f7fa;
+                        color: #172033;
+                    }
 
-                    <h1>
-                        Institutional Dashboard
-                    </h1>
+                    .verified-page {
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 32px 18px;
+                        background:
+                            radial-gradient(
+                                circle at top right,
+                                rgba(37, 99, 235, 0.08),
+                                transparent 32%
+                            ),
+                            #f5f7fa;
+                    }
 
-                    <p className="verified-description">
-                        Your institution has successfully completed the
-                        initial verification checks and is authorised to
-                        access the resource provider portal.
-                    </p>
+                    .verified-card {
+                        width: 100%;
+                        max-width: 720px;
+                        padding: 36px;
+                        border: 1px solid #e5e7eb;
+                        border-radius: 20px;
+                        background: #ffffff;
+                        box-shadow:
+                            0 20px 60px rgba(15, 23, 42, 0.08);
+                    }
 
-                    <div className="institution-summary">
+                    .verified-badge {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 7px;
+                        padding: 7px 11px;
+                        border-radius: 999px;
+                        background: #ecfdf3;
+                        color: #15803d;
+                        font-size: 10px;
+                        font-weight: 800;
+                        letter-spacing: 0.7px;
+                    }
 
-                        <div className="summary-row">
-                            <span>Institution Name</span>
-                            <strong>{institutionName}</strong>
+                    .verified-card h1 {
+                        margin: 18px 0 8px;
+                        color: #111827;
+                        font-size: 30px;
+                        letter-spacing: -0.8px;
+                    }
+
+                    .verified-description {
+                        margin: 0;
+                        color: #667085;
+                        font-size: 14px;
+                        line-height: 1.6;
+                    }
+
+                    .institution-summary {
+                        margin-top: 26px;
+                        overflow: hidden;
+                        border: 1px solid #e8ebef;
+                        border-radius: 14px;
+                        background: #fafbfc;
+                    }
+
+                    .summary-row {
+                        display: grid;
+                        grid-template-columns: 190px 1fr;
+                        gap: 18px;
+                        padding: 14px 17px;
+                        border-bottom: 1px solid #e8ebef;
+                        font-size: 13px;
+                    }
+
+                    .summary-row:last-child {
+                        border-bottom: none;
+                    }
+
+                    .summary-row span {
+                        color: #667085;
+                    }
+
+                    .summary-row strong {
+                        color: #172033;
+                        overflow-wrap: anywhere;
+                    }
+
+                    .verified-text {
+                        color: #15803d !important;
+                    }
+
+                    .access-note {
+                        margin-top: 20px;
+                        padding: 16px;
+                        border: 1px solid #dbeafe;
+                        border-radius: 12px;
+                        background: #f8fbff;
+                    }
+
+                    .access-note strong {
+                        color: #1d4ed8;
+                        font-size: 12px;
+                    }
+
+                    .access-note p {
+                        margin: 6px 0 0;
+                        color: #667085;
+                        font-size: 12px;
+                        line-height: 1.55;
+                    }
+
+                    .logout-button {
+                        width: 100%;
+                        margin-top: 22px;
+                        height: 46px;
+                        border: none;
+                        border-radius: 10px;
+                        background: #111827;
+                        color: white;
+                        font-size: 13px;
+                        font-weight: 650;
+                        cursor: pointer;
+                        transition: 0.2s ease;
+                    }
+
+                    .logout-button:hover {
+                        background: #2563eb;
+                    }
+
+                    @media (max-width: 600px) {
+                        .verified-card {
+                            padding: 24px 18px;
+                        }
+
+                        .verified-card h1 {
+                            font-size: 25px;
+                        }
+
+                        .summary-row {
+                            grid-template-columns: 1fr;
+                            gap: 4px;
+                        }
+                    }
+                `}</style>
+
+                <main className="verified-page">
+                    <div className="verified-card">
+                        <div className="verified-badge">
+                            ✓ VERIFIED INSTITUTION
                         </div>
 
-                        <div className="summary-row">
-                            <span>Registration ID</span>
-                            <strong>{registrationId}</strong>
-                        </div>
+                        <h1>Institutional Dashboard</h1>
 
-                        <div className="summary-row">
-                            <span>Institution Type</span>
-                            <strong>{institutionType}</strong>
-                        </div>
-
-                        <div className="summary-row">
-                            <span>Institutional Email</span>
-                            <strong>{email}</strong>
-                        </div>
-
-                        <div className="summary-row">
-                            <span>Representative</span>
-                            <strong>{representativeName}</strong>
-                        </div>
-
-                        <div className="summary-row">
-                            <span>Representative Phone</span>
-                            <strong>{representativePhone}</strong>
-                        </div>
-
-                        <div className="summary-row">
-                            <span>Verification Status</span>
-                            <strong className="verified-text">
-                                Verified
-                            </strong>
-                        </div>
-
-                        <div className="summary-row">
-                            <span>Administrator Approval</span>
-                            <strong className="verified-text">
-                                Approved
-                            </strong>
-                        </div>
-
-                    </div>
-
-                    <div className="access-note">
-                        <strong>Resource Provider Access</strong>
-
-                        <p>
-                            Resources added by this institution will undergo
-                            separate resource-level verification, including
-                            equipment details, availability, certification,
-                            pricing, access terms and facility manager
-                            approval.
+                        <p className="verified-description">
+                            Your institution has successfully completed the
+                            initial verification checks and is authorised to
+                            access the resource provider portal.
                         </p>
+
+                        <div className="institution-summary">
+                            <div className="summary-row">
+                                <span>Institution Name</span>
+                                <strong>{institutionName}</strong>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Registration ID</span>
+                                <strong>{registrationId}</strong>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Institution Type</span>
+                                <strong>{institutionType}</strong>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Institutional Email</span>
+                                <strong>{email}</strong>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Representative</span>
+                                <strong>{representativeName}</strong>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Representative Phone</span>
+                                <strong>{representativePhone}</strong>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Verification Status</span>
+                                <strong className="verified-text">
+                                    Verified
+                                </strong>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Administrator Approval</span>
+                                <strong className="verified-text">
+                                    Approved
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div className="access-note">
+                            <strong>Resource Provider Access</strong>
+                            <p>
+                                Resources added by this institution will
+                                undergo separate resource-level verification,
+                                including equipment details, availability,
+                                certification, pricing, access terms and
+                                facility manager approval.
+                            </p>
+                        </div>
+
+                        <button
+                            className="logout-button"
+                            onClick={() => {
+                                setIsLoggedIn(false);
+                                setIsVerified(false);
+                            }}
+                        >
+                            Log Out
+                        </button>
                     </div>
-
-                    <button
-                        className="logout-button"
-                        onClick={() => {
-                            setIsLoggedIn(false);
-                            setIsVerified(false);
-                        }}
-                    >
-                        Log Out
-                    </button>
-
-                </div>
-            </main>
+                </main>
+            </>
         );
     }
 
     return (
         <>
             <style>{`
-
                 * {
                     box-sizing: border-box;
                 }
@@ -266,103 +407,209 @@ export const Login: React.FC = () => {
                         BlinkMacSystemFont,
                         "Segoe UI",
                         sans-serif;
-                    background: #f7f8fa;
-                    color: #171717;
+                    background: #f4f6f9;
+                    color: #172033;
                 }
 
                 .login-page {
                     min-height: 100vh;
                     width: 100%;
                     display: flex;
-                    justify-content: center;
                     align-items: center;
-                    padding: 40px 20px;
-                    background: #f7f8fa;
+                    justify-content: center;
+                    padding: 42px 20px;
+                    background:
+                        radial-gradient(
+                            circle at 15% 10%,
+                            rgba(37, 99, 235, 0.07),
+                            transparent 28%
+                        ),
+                        radial-gradient(
+                            circle at 90% 85%,
+                            rgba(37, 99, 235, 0.05),
+                            transparent 30%
+                        ),
+                        #f4f6f9;
                 }
 
                 .login-wrapper {
                     width: 100%;
-                    max-width: 620px;
+                    max-width: 940px;
                 }
 
-                .login-header {
-                    text-align: center;
-                    margin-bottom: 24px;
-                }
-
-                .eyebrow {
-                    margin: 0 0 7px;
-                    font-size: 11px;
-                    font-weight: 700;
-                    letter-spacing: 1.8px;
-                    color: #2563eb;
-                    text-transform: uppercase;
-                }
-
-                .login-header h1 {
-                    margin: 0;
-                    font-size: 32px;
-                    line-height: 1.15;
-                    letter-spacing: -1px;
-                    font-weight: 750;
-                }
-
-                .subtitle {
-                    max-width: 500px;
-                    margin: 9px auto 0;
-                    color: #777;
-                    font-size: 14px;
-                    line-height: 1.5;
-                }
-
-                .card {
-                    width: 100%;
-                    border: 1px solid #dedede;
-                    border-radius: 16px;
-                    background: #ffffff;
-                    box-shadow:
-                        0 4px 12px rgba(0, 0, 0, 0.03);
-                }
-
-                .card-content {
-                    padding: 28px;
-                }
-
-                .verification-banner {
+                .login-top {
                     display: flex;
-                    align-items: flex-start;
-                    gap: 12px;
-                    padding: 14px;
-                    margin-bottom: 24px;
-                    border: 1px solid #e5e7eb;
-                    border-radius: 10px;
-                    background: #f8fafc;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 20px;
+                    padding: 0 3px;
                 }
 
-                .verification-mark {
-                    width: 22px;
-                    height: 22px;
-                    min-width: 22px;
+                .brand {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    color: #111827;
+                    font-size: 15px;
+                    font-weight: 750;
+                    letter-spacing: -0.2px;
+                }
+
+                .brand-mark {
+                    width: 31px;
+                    height: 31px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    border-radius: 50%;
-                    background: #171717;
+                    border-radius: 9px;
+                    background: #111827;
                     color: white;
                     font-size: 12px;
+                    font-weight: 800;
+                }
+
+                .portal-label {
+                    color: #98a2b3;
+                    font-size: 10px;
                     font-weight: 700;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
                 }
 
-                .verification-banner strong {
-                    display: block;
-                    margin-bottom: 3px;
-                    font-size: 12px;
+                .login-layout {
+                    display: grid;
+                    grid-template-columns: 0.82fr 1.45fr;
+                    min-height: 600px;
+                    overflow: hidden;
+                    border: 1px solid #e2e6eb;
+                    border-radius: 22px;
+                    background: white;
+                    box-shadow:
+                        0 24px 70px rgba(15, 23, 42, 0.09);
                 }
 
-                .verification-banner p {
+                .login-intro {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 38px;
+                    overflow: hidden;
+                    background: #111827;
+                    color: white;
+                }
+
+                .login-intro::before {
+                    content: "";
+                    position: absolute;
+                    width: 260px;
+                    height: 260px;
+                    right: -120px;
+                    top: -90px;
+                    border: 1px solid rgba(255, 255, 255, 0.09);
+                    border-radius: 50%;
+                }
+
+                .login-intro::after {
+                    content: "";
+                    position: absolute;
+                    width: 190px;
+                    height: 190px;
+                    left: -100px;
+                    bottom: -80px;
+                    border: 1px solid rgba(255, 255, 255, 0.07);
+                    border-radius: 50%;
+                }
+
+                .intro-content,
+                .intro-footer {
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .intro-kicker {
+                    margin: 0 0 18px;
+                    color: #93c5fd;
+                    font-size: 10px;
+                    font-weight: 800;
+                    letter-spacing: 1.5px;
+                    text-transform: uppercase;
+                }
+
+                .login-intro h1 {
+                    max-width: 300px;
                     margin: 0;
-                    color: #666;
+                    font-size: 34px;
+                    line-height: 1.08;
+                    letter-spacing: -1.2px;
+                }
+
+                .intro-description {
+                    max-width: 300px;
+                    margin: 18px 0 0;
+                    color: #cbd5e1;
+                    font-size: 13px;
+                    line-height: 1.65;
+                }
+
+                .intro-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 13px;
+                    margin-top: 34px;
+                }
+
+                .intro-item {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 10px;
+                    color: #dbe4ef;
                     font-size: 11px;
+                    line-height: 1.45;
+                }
+
+                .intro-check {
+                    width: 19px;
+                    height: 19px;
+                    min-width: 19px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid #334155;
+                    border-radius: 50%;
+                    color: #93c5fd;
+                    font-size: 9px;
+                    font-weight: 800;
+                }
+
+                .intro-footer {
+                    padding-top: 25px;
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
+                    color: #94a3b8;
+                    font-size: 10px;
+                    line-height: 1.5;
+                }
+
+                .login-form-panel {
+                    padding: 38px 42px;
+                    background: #ffffff;
+                }
+
+                .form-heading {
+                    margin-bottom: 26px;
+                }
+
+                .form-heading h2 {
+                    margin: 0;
+                    color: #111827;
+                    font-size: 25px;
+                    letter-spacing: -0.6px;
+                }
+
+                .form-heading p {
+                    margin: 7px 0 0;
+                    color: #667085;
+                    font-size: 12px;
                     line-height: 1.5;
                 }
 
@@ -372,22 +619,22 @@ export const Login: React.FC = () => {
                     gap: 17px;
                 }
 
-                .form-row {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 16px;
-                }
-
                 .form-group {
                     display: flex;
                     flex-direction: column;
                     gap: 7px;
                 }
 
+                .form-row {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 14px;
+                }
+
                 .form-group label {
-                    font-size: 12px;
-                    font-weight: 600;
-                    color: #333;
+                    color: #344054;
+                    font-size: 11px;
+                    font-weight: 700;
                 }
 
                 .required {
@@ -395,23 +642,28 @@ export const Login: React.FC = () => {
                 }
 
                 .input-box {
-                    width: 100%;
-                    height: 44px;
                     display: flex;
                     align-items: center;
+                    height: 44px;
                     padding: 0 13px;
-                    border: 1px solid #dedede;
-                    border-radius: 10px;
+                    border: 1px solid #d9dee5;
+                    border-radius: 9px;
                     background: #ffffff;
                     transition:
-                        border-color 0.2s ease,
-                        box-shadow 0.2s ease;
+                        border-color 0.18s ease,
+                        box-shadow 0.18s ease,
+                        background 0.18s ease;
+                }
+
+                .input-box:hover {
+                    border-color: #c3cad4;
                 }
 
                 .input-box:focus-within {
                     border-color: #2563eb;
+                    background: #fff;
                     box-shadow:
-                        0 0 0 3px rgba(37, 99, 235, 0.08);
+                        0 0 0 3px rgba(37, 99, 235, 0.09);
                 }
 
                 .input-box input {
@@ -420,37 +672,41 @@ export const Login: React.FC = () => {
                     border: none;
                     outline: none;
                     background: transparent;
-                    color: #222;
-                    font-size: 14px;
+                    color: #172033;
+                    font-size: 13px;
                 }
 
                 .input-box input::placeholder {
-                    color: #aaa;
+                    color: #a0a7b2;
                 }
 
                 select {
                     width: 100%;
                     height: 44px;
                     padding: 0 12px;
-                    border: 1px solid #dedede;
-                    border-radius: 10px;
-                    background: #ffffff;
-                    color: #222;
-                    font-size: 14px;
+                    border: 1px solid #d9dee5;
+                    border-radius: 9px;
                     outline: none;
+                    background: #ffffff;
+                    color: #172033;
+                    font-size: 13px;
+                    cursor: pointer;
+                    transition:
+                        border-color 0.18s ease,
+                        box-shadow 0.18s ease;
                 }
 
                 select:focus {
                     border-color: #2563eb;
                     box-shadow:
-                        0 0 0 3px rgba(37, 99, 235, 0.08);
+                        0 0 0 3px rgba(37, 99, 235, 0.09);
                 }
 
                 .field-help {
                     margin: 0;
-                    color: #888;
-                    font-size: 10px;
-                    line-height: 1.4;
+                    color: #98a2b3;
+                    font-size: 9.5px;
+                    line-height: 1.45;
                 }
 
                 .label-row {
@@ -461,7 +717,7 @@ export const Login: React.FC = () => {
 
                 .forgot-link {
                     color: #2563eb;
-                    font-size: 12px;
+                    font-size: 10px;
                     text-decoration: none;
                 }
 
@@ -469,14 +725,52 @@ export const Login: React.FC = () => {
                     text-decoration: underline;
                 }
 
+                .verification-banner {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 11px;
+                    margin-bottom: 22px;
+                    padding: 12px 13px;
+                    border: 1px solid #dbeafe;
+                    border-radius: 10px;
+                    background: #f8fbff;
+                }
+
+                .verification-mark {
+                    width: 21px;
+                    height: 21px;
+                    min-width: 21px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 6px;
+                    background: #2563eb;
+                    color: white;
+                    font-size: 10px;
+                    font-weight: 800;
+                }
+
+                .verification-banner strong {
+                    display: block;
+                    margin-bottom: 2px;
+                    color: #1e3a8a;
+                    font-size: 10.5px;
+                }
+
+                .verification-banner p {
+                    margin: 0;
+                    color: #64748b;
+                    font-size: 9.5px;
+                    line-height: 1.45;
+                }
+
                 .declaration {
                     display: flex;
                     align-items: flex-start;
                     gap: 9px;
-                    padding: 13px;
-                    margin-top: 2px;
-                    border: 1px solid #eeeeee;
-                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #eaecf0;
+                    border-radius: 9px;
                     background: #fafafa;
                     cursor: pointer;
                 }
@@ -484,224 +778,174 @@ export const Login: React.FC = () => {
                 .declaration input {
                     width: 15px;
                     height: 15px;
-                    margin-top: 2px;
+                    min-width: 15px;
+                    margin: 1px 0 0;
                     accent-color: #2563eb;
-                    flex-shrink: 0;
+                    cursor: pointer;
                 }
 
                 .declaration span {
-                    color: #555;
-                    font-size: 11px;
-                    line-height: 1.5;
+                    color: #667085;
+                    font-size: 9.5px;
+                    line-height: 1.55;
                 }
 
                 .error-message {
-                    padding: 11px 12px;
+                    padding: 10px 11px;
                     border: 1px solid #fecaca;
-                    border-radius: 9px;
-                    background: #fef2f2;
-                    color: #b91c1c;
-                    font-size: 11px;
+                    border-radius: 8px;
+                    background: #fff7f7;
+                    color: #b42318;
+                    font-size: 10px;
                     line-height: 1.45;
                 }
 
                 .submit-button {
                     width: 100%;
-                    min-height: 46px;
-                    margin-top: 3px;
-                    padding: 0 18px;
+                    height: 46px;
+                    margin-top: 1px;
                     border: none;
-                    border-radius: 10px;
-                    background: #171717;
-                    color: #ffffff;
-                    font-size: 14px;
-                    font-weight: 600;
+                    border-radius: 9px;
+                    background: #111827;
+                    color: white;
+                    font-size: 12px;
+                    font-weight: 700;
                     cursor: pointer;
                     transition:
-                        background 0.2s ease,
-                        transform 0.2s ease;
+                        transform 0.18s ease,
+                        background 0.18s ease,
+                        box-shadow 0.18s ease;
                 }
 
                 .submit-button:hover {
                     background: #2563eb;
+                    box-shadow:
+                        0 8px 20px rgba(37, 99, 235, 0.18);
                     transform: translateY(-1px);
                 }
 
+                .submit-button:active {
+                    transform: translateY(0);
+                }
+
                 .card-footer {
-                    margin-top: 22px;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 9px;
+                    margin-top: 21px;
                     padding-top: 17px;
-                    border-top: 1px solid #eeeeee;
+                    border-top: 1px solid #eef0f3;
+                }
+
+                .footer-dot {
+                    width: 7px;
+                    height: 7px;
+                    min-width: 7px;
+                    margin-top: 4px;
+                    border-radius: 50%;
+                    background: #16a34a;
+                    box-shadow:
+                        0 0 0 3px rgba(22, 163, 74, 0.09);
                 }
 
                 .support-title {
-                    color: #999;
+                    margin: 0 0 3px;
+                    color: #344054;
                     font-size: 9px;
-                    font-weight: 700;
-                    letter-spacing: 0.7px;
+                    font-weight: 750;
                 }
 
                 .support-text {
-                    margin: 4px 0 0;
-                    color: #666;
-                    font-size: 11px;
+                    margin: 0;
+                    color: #98a2b3;
+                    font-size: 9px;
                     line-height: 1.45;
                 }
 
                 .system-status {
                     display: flex;
-                    justify-content: center;
                     align-items: center;
-                    gap: 8px;
-                    margin-top: 18px;
-                    color: #666;
-                    font-size: 12px;
+                    justify-content: center;
+                    gap: 7px;
+                    margin-top: 15px;
+                    color: #98a2b3;
+                    font-size: 9px;
                 }
 
                 .status-dot {
-                    width: 7px;
-                    height: 7px;
+                    width: 6px;
+                    height: 6px;
                     border-radius: 50%;
-                    background: #15803d;
+                    background: #16a34a;
                 }
 
-                /* VERIFIED PAGE */
+                @media (max-width: 820px) {
+                    .login-layout {
+                        grid-template-columns: 1fr;
+                    }
 
-                .verified-page {
-                    min-height: 100vh;
-                    width: 100%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 40px 20px;
-                    background: #f7f8fa;
-                    font-family:
-                        Inter,
-                        -apple-system,
-                        BlinkMacSystemFont,
-                        "Segoe UI",
-                        sans-serif;
+                    .login-intro {
+                        min-height: 250px;
+                        padding: 28px;
+                    }
+
+                    .intro-list {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        margin-top: 24px;
+                    }
+
+                    .intro-footer {
+                        display: none;
+                    }
+
+                    .login-form-panel {
+                        padding: 30px;
+                    }
                 }
 
-                .verified-card {
-                    width: 100%;
-                    max-width: 680px;
-                    padding: 32px;
-                    border: 1px solid #dedede;
-                    border-radius: 16px;
-                    background: #ffffff;
-                    box-shadow:
-                        0 4px 12px rgba(0, 0, 0, 0.03);
-                }
-
-                .verified-badge {
-                    display: inline-flex;
-                    padding: 7px 11px;
-                    margin-bottom: 18px;
-                    border-radius: 20px;
-                    background: #ecfdf3;
-                    color: #15803d;
-                    font-size: 10px;
-                    font-weight: 700;
-                    letter-spacing: 0.5px;
-                }
-
-                .verified-card h1 {
-                    margin: 0 0 10px;
-                    font-size: 30px;
-                    letter-spacing: -0.8px;
-                }
-
-                .verified-description {
-                    margin: 0;
-                    color: #666;
-                    font-size: 14px;
-                    line-height: 1.6;
-                }
-
-                .institution-summary {
-                    margin-top: 24px;
-                    padding: 18px;
-                    border: 1px solid #eeeeee;
-                    border-radius: 12px;
-                    background: #fafafa;
-                }
-
-                .summary-row {
-                    display: grid;
-                    grid-template-columns: 180px 1fr;
-                    gap: 15px;
-                    padding: 10px 0;
-                    border-bottom: 1px solid #eeeeee;
-                    font-size: 12px;
-                }
-
-                .summary-row:last-child {
-                    border-bottom: none;
-                }
-
-                .summary-row span {
-                    color: #777;
-                }
-
-                .summary-row strong {
-                    color: #222;
-                    overflow-wrap: anywhere;
-                }
-
-                .verified-text {
-                    color: #15803d !important;
-                }
-
-                .access-note {
-                    margin-top: 20px;
-                    padding: 16px;
-                    border: 1px solid #e5e7eb;
-                    border-radius: 10px;
-                    background: #f8fafc;
-                }
-
-                .access-note strong {
-                    font-size: 12px;
-                }
-
-                .access-note p {
-                    margin: 6px 0 0;
-                    color: #666;
-                    font-size: 11px;
-                    line-height: 1.5;
-                }
-
-                .logout-button {
-                    margin-top: 20px;
-                    padding: 10px 20px;
-                    border: none;
-                    border-radius: 8px;
-                    background: #171717;
-                    color: #ffffff;
-                    font-size: 13px;
-                    font-weight: 600;
-                    cursor: pointer;
-                }
-
-                .logout-button:hover {
-                    background: #2563eb;
-                }
-
-                /* TABLET */
-
-                @media (max-width: 700px) {
-
+                @media (max-width: 560px) {
                     .login-page {
                         align-items: flex-start;
-                        padding: 28px 16px;
+                        padding: 18px 10px;
                     }
 
-                    .login-header h1 {
-                        font-size: 29px;
+                    .login-top {
+                        padding: 0 4px;
                     }
 
-                    .card-content {
-                        padding: 22px;
+                    .portal-label {
+                        display: none;
+                    }
+
+                    .login-layout {
+                        border-radius: 16px;
+                    }
+
+                    .login-intro {
+                        min-height: auto;
+                        padding: 25px 22px;
+                    }
+
+                    .login-intro h1 {
+                        font-size: 28px;
+                    }
+
+                    .intro-description {
+                        margin-top: 12px;
+                    }
+
+                    .intro-list {
+                        display: flex;
+                        margin-top: 20px;
+                    }
+
+                    .login-form-panel {
+                        padding: 25px 19px;
+                    }
+
+                    .form-heading h2 {
+                        font-size: 23px;
                     }
 
                     .form-row {
@@ -709,102 +953,101 @@ export const Login: React.FC = () => {
                         gap: 17px;
                     }
 
-                    .verified-page {
-                        align-items: flex-start;
-                        padding: 28px 16px;
-                    }
-
-                    .verified-card {
-                        padding: 24px;
-                    }
-                }
-
-                /* MOBILE */
-
-                @media (max-width: 480px) {
-
-                    .login-page {
-                        padding: 20px 10px;
-                    }
-
-                    .login-header {
-                        margin-bottom: 18px;
-                    }
-
-                    .login-header h1 {
-                        font-size: 26px;
-                    }
-
-                    .subtitle {
-                        font-size: 13px;
-                    }
-
-                    .card {
-                        border-radius: 12px;
-                    }
-
-                    .card-content {
-                        padding: 18px;
-                    }
-
                     .verification-banner {
-                        padding: 12px;
-                    }
-
-                    .login-form {
-                        gap: 15px;
-                    }
-
-                    .input-box,
-                    select {
-                        height: 46px;
-                    }
-
-                    .submit-button {
-                        min-height: 48px;
-                    }
-
-                    .verified-card {
-                        padding: 20px;
-                        border-radius: 12px;
-                    }
-
-                    .verified-card h1 {
-                        font-size: 25px;
-                    }
-
-                    .summary-row {
-                        grid-template-columns: 1fr;
-                        gap: 4px;
+                        margin-bottom: 19px;
                     }
                 }
-
             `}</style>
 
             <main className="login-page">
                 <div className="login-wrapper">
 
-                    <div className="login-header">
-                        <p className="eyebrow">
-                            INSTITUTION PORTAL
-                        </p>
+                    <div className="login-top">
+                        <div className="brand">
+                            <div className="brand-mark">RL</div>
+                            ResourceLink
+                        </div>
 
-                        <h1>
-                            Institutional Login
-                        </h1>
-
-                        <p className="subtitle">
-                            Access is limited to officially registered and
-                            verified institutions.
-                        </p>
+                        <div className="portal-label">
+                            Institution Portal
+                        </div>
                     </div>
 
-                    <div className="card">
-                        <div className="card-content">
+                    <div className="login-layout">
+
+                        <section className="login-intro">
+                            <div className="intro-content">
+
+                                <p className="intro-kicker">
+                                    Institutional Access
+                                </p>
+
+                                <h1>
+                                    Connect verified institutions to shared resources.
+                                </h1>
+
+                                <p className="intro-description">
+                                    Register your institution to access the
+                                    resource provider platform and participate
+                                    in verified institutional resource sharing.
+                                </p>
+
+                                <div className="intro-list">
+                                    <div className="intro-item">
+                                        <span className="intro-check">✓</span>
+                                        <span>
+                                            Official institution details
+                                            are collected.
+                                        </span>
+                                    </div>
+
+                                    <div className="intro-item">
+                                        <span className="intro-check">✓</span>
+                                        <span>
+                                            Institutional identity is
+                                            verified.
+                                        </span>
+                                    </div>
+
+                                    <div className="intro-item">
+                                        <span className="intro-check">✓</span>
+                                        <span>
+                                            Authorised representatives
+                                            are recorded.
+                                        </span>
+                                    </div>
+
+                                    <div className="intro-item">
+                                        <span className="intro-check">✓</span>
+                                        <span>
+                                            Administrator approval is
+                                            required.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="intro-footer">
+                                Institutional verification helps maintain
+                                trusted access between participating
+                                organisations.
+                            </div>
+                        </section>
+
+                        <section className="login-form-panel">
+
+                            <div className="form-heading">
+                                <h2>Institutional Login</h2>
+
+                                <p>
+                                    Enter your official institution details
+                                    to continue.
+                                </p>
+                            </div>
 
                             <div className="verification-banner">
                                 <div className="verification-mark">
-                                    V
+                                    ✓
                                 </div>
 
                                 <div>
@@ -999,6 +1242,7 @@ export const Login: React.FC = () => {
                                 </div>
 
                                 <div className="form-group">
+
                                     <div className="label-row">
                                         <label htmlFor="password">
                                             Password
@@ -1025,6 +1269,7 @@ export const Login: React.FC = () => {
                                             }
                                         />
                                     </div>
+
                                 </div>
 
                                 <label className="declaration">
@@ -1065,27 +1310,31 @@ export const Login: React.FC = () => {
                             </form>
 
                             <div className="card-footer">
-                                <div className="support-title">
-                                    INSTITUTION VERIFICATION
-                                </div>
+                                <span className="footer-dot"></span>
 
-                                <p className="support-text">
-                                    Verification may include institutional
-                                    domain validation, official registration
-                                    records, government or academic registry
-                                    checks, submitted documentation and
-                                    administrator approval.
-                                </p>
+                                <div>
+                                    <p className="support-title">
+                                        INSTITUTION VERIFICATION
+                                    </p>
+
+                                    <p className="support-text">
+                                        Verification may include institutional
+                                        domain validation, official
+                                        registration records, government or
+                                        academic registry checks, submitted
+                                        documentation and administrator
+                                        approval.
+                                    </p>
+                                </div>
                             </div>
 
-                        </div>
+                        </section>
+
                     </div>
 
                     <div className="system-status">
                         <span className="status-dot"></span>
-                        <span>
-                            Secure institutional access
-                        </span>
+                        Secure institutional access
                     </div>
 
                 </div>
@@ -1095,4 +1344,3 @@ export const Login: React.FC = () => {
 };
 
 export default Login;
-
